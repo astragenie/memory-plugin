@@ -1,0 +1,16 @@
+# cortex plugin gitignore.
+
+# Local override of committed profiles (.env.local / .env.azuredev).
+# Useful for stashing a real CORTEX_API_KEY or Clerk credentials without
+# touching tracked files.
+.env
+
+# Node CLI artifacts.
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Anything matching Clerk cached creds -- defensive in case a user copies
+# their auth.json into the plugin root.
+auth.json
