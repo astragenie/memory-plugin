@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# cortex pre-compact capture hook.
+# AstraMemory pre-compact capture hook.
 #
 # Triggered by Claude Code right before the conversation is auto-compacted.
 # Reads the hook payload from stdin (JSON with transcript_path, session_id,
@@ -8,8 +8,8 @@
 # the compaction window.
 #
 # Hard requirements:
-#   - cortex API reachable at CORTEX_API_URL  (default: http://localhost:5201)
-#   - CORTEX_API_KEY (default: dev-bootstrap-local)
+#   - AstraMemory API reachable at MEMORY_API_URL  (default: http://localhost:5201)
+#   - MEMORY_API_KEY (default: dev-bootstrap-local)
 # Soft requirement: jq for parsing transcript. Falls back to a no-op if absent.
 #
 # Never fails the hook chain — every error path is swallowed so Claude Code
@@ -18,10 +18,14 @@
 set +e
 set -u
 
-CORTEX_API_URL="${CORTEX_API_URL:-http://localhost:5201}"
-CORTEX_API_KEY="${CORTEX_API_KEY:-dev-bootstrap-local}"
-MAX_TURNS="${CORTEX_PRECOMPACT_MAX_TURNS:-20}"
-MAX_CHARS="${CORTEX_PRECOMPACT_MAX_CHARS:-12000}"
+# Load profile (.env.local / .env.azuredev / .env / plugin.json defaultEnv).
+# shellcheck source=./_load-env.sh
+. "$(dirname "${BASH_SOURCE[0]}")/_load-env.sh"
+
+MEMORY_API_URL="${MEMORY_API_URL:-http://localhost:5201}"
+MEMORY_API_KEY="${MEMORY_API_KEY:-dev-bootstrap-local}"
+MAX_TURNS="${MEMORY_PRECOMPACT_MAX_TURNS:-20}"
+MAX_CHARS="${MEMORY_PRECOMPACT_MAX_CHARS:-12000}"
 
 # Slurp hook payload (Claude Code feeds JSON on stdin).
 payload="$(cat 2>/dev/null || true)"
@@ -29,8 +33,8 @@ if [ -z "$payload" ]; then
   exit 0
 fi
 
-# Cortex must be reachable, otherwise quietly bail.
-if ! curl -sS -o /dev/null -m 2 "${CORTEX_API_URL}/health"; then
+# AstraMemory must be reachable, otherwise quietly bail.
+if ! curl -sS -o /dev/null -m 2 "${MEMORY_API_URL}/health"; then
   exit 0
 fi
 
@@ -63,9 +67,9 @@ content="$(printf 'Pre-compact session digest (%s)\n\nProject: %s\nSession: %s\n
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$project_id" "$session_id" "$digest")"
 
 curl -sS -o /dev/null -m 5 \
-  -X POST "${CORTEX_API_URL}/memories" \
+  -X POST "${MEMORY_API_URL}/memories" \
   -H "Content-Type: application/json" \
-  -H "Authorization: ApiKey ${CORTEX_API_KEY}" \
+  -H "Authorization: ApiKey ${MEMORY_API_KEY}" \
   -d "$(jq -nc \
         --arg content "$content" \
         --arg project "$project_id" \

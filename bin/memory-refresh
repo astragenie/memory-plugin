@@ -7,7 +7,7 @@ const REFRESH_THRESHOLD_SECONDS = 300; // refresh if less than 5 min remaining
 async function main() {
   const auth = await readAuth();
   if (!auth) {
-    console.error('cortex-refresh: no cached tokens. Run cortex-login first.');
+    console.error('memory-refresh: no cached tokens. Run memory-login first.');
     process.exit(2);
   }
   const force = process.argv.includes('--force');
@@ -18,7 +18,7 @@ async function main() {
     return;
   }
   if (!auth.refresh_token) {
-    console.error('cortex-refresh: cached tokens have no refresh_token. Re-run cortex-login.');
+    console.error('memory-refresh: cached tokens have no refresh_token. Re-run memory-login.');
     process.exit(3);
   }
   const resp = await fetch(`${auth.authority}/oauth/token`, {
@@ -32,7 +32,7 @@ async function main() {
   });
   if (!resp.ok) {
     const t = await resp.text();
-    console.error(`cortex-refresh: refresh failed: ${resp.status} ${t}`);
+    console.error(`memory-refresh: refresh failed: ${resp.status} ${t}`);
     process.exit(4);
   }
   const tokens = await resp.json();

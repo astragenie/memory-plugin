@@ -1,7 +1,7 @@
-# cortex plugin gitignore.
+# memory plugin gitignore.
 
 # Local override of committed profiles (.env.local / .env.azuredev).
-# Useful for stashing a real CORTEX_API_KEY or Clerk credentials without
+# Useful for stashing a real MEMORY_API_KEY or Clerk credentials without
 # touching tracked files.
 .env
 

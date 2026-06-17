@@ -10,11 +10,11 @@ import { dirname } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(__dirname, '..');
 
-// Sets up a fake auth.json with expires_at = now + 1 hour, runs cortex-refresh,
+// Sets up a fake auth.json with expires_at = now + 1 hour, runs memory-refresh,
 // asserts the script prints the cached access token unchanged (no network).
-test('cortex-refresh prints cached token when expiry > 5 min away', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cortex-test-'));
-  const cortexDir = join(dir, 'cortex');
+test('memory-refresh prints cached token when expiry > 5 min away', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'memory-test-'));
+  const memoryDir = join(dir, 'memory');
 
   // Force the helper to write into our temp dir by overriding APPDATA / XDG_CONFIG_HOME.
   // This ensures the Windows code path is exercised even on Linux CI runners by
@@ -26,8 +26,8 @@ test('cortex-refresh prints cached token when expiry > 5 min away', () => {
   env.XDG_CONFIG_HOME = dir;
 
   // Pre-seed auth.json.
-  mkdirSync(cortexDir, { recursive: true });
-  const authPath = join(cortexDir, 'auth.json');
+  mkdirSync(memoryDir, { recursive: true });
+  const authPath = join(memoryDir, 'auth.json');
   const expiresAt = Math.floor(Date.now() / 1000) + 3600; // 1 hour from now
   writeFileSync(authPath, JSON.stringify({
     access_token: 'cached-token-abc',
@@ -39,18 +39,18 @@ test('cortex-refresh prints cached token when expiry > 5 min away', () => {
 
   const result = spawnSync(
     process.execPath,
-    [join(repoRoot, 'bin', 'cortex-refresh')],
+    [join(repoRoot, 'bin', 'memory-refresh')],
     { env, encoding: 'utf8', cwd: repoRoot }
   );
 
-  assert.equal(result.status, 0, `cortex-refresh should exit 0 when token is fresh (stderr: ${result.stderr})`);
-  assert.equal(result.stdout, 'cached-token-abc', 'cortex-refresh should emit cached access token unchanged');
+  assert.equal(result.status, 0, `memory-refresh should exit 0 when token is fresh (stderr: ${result.stderr})`);
+  assert.equal(result.stdout, 'cached-token-abc', 'memory-refresh should emit cached access token unchanged');
 
   rmSync(dir, { recursive: true, force: true });
 });
 
-test('cortex-refresh exits 2 when no auth.json present', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cortex-noauth-'));
+test('memory-refresh exits 2 when no auth.json present', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'memory-noauth-'));
 
   // Point both env vars at an empty dir so auth.json is missing.
   const env = { ...process.env };
@@ -59,17 +59,17 @@ test('cortex-refresh exits 2 when no auth.json present', () => {
 
   const result = spawnSync(
     process.execPath,
-    [join(repoRoot, 'bin', 'cortex-refresh')],
+    [join(repoRoot, 'bin', 'memory-refresh')],
     { env, encoding: 'utf8', cwd: repoRoot }
   );
 
-  assert.equal(result.status, 2, `cortex-refresh should exit 2 when no auth.json (stderr: ${result.stderr})`);
+  assert.equal(result.status, 2, `memory-refresh should exit 2 when no auth.json (stderr: ${result.stderr})`);
 
   rmSync(dir, { recursive: true, force: true });
 });
 
-test('cortex-token exits 2 when no auth.json present', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'cortex-token-noauth-'));
+test('memory-token exits 2 when no auth.json present', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'memory-token-noauth-'));
 
   const env = { ...process.env };
   env.APPDATA = dir;
@@ -77,12 +77,12 @@ test('cortex-token exits 2 when no auth.json present', () => {
 
   const result = spawnSync(
     process.execPath,
-    [join(repoRoot, 'bin', 'cortex-token')],
+    [join(repoRoot, 'bin', 'memory-token')],
     { env, encoding: 'utf8', cwd: repoRoot }
   );
 
-  // cortex-token delegates to cortex-refresh; expect same exit code
-  assert.equal(result.status, 2, `cortex-token should exit 2 when no auth.json (stderr: ${result.stderr})`);
+  // memory-token delegates to memory-refresh; expect same exit code
+  assert.equal(result.status, 2, `memory-token should exit 2 when no auth.json (stderr: ${result.stderr})`);
 
   rmSync(dir, { recursive: true, force: true });
 });

@@ -1,16 +1,16 @@
 ---
-description: Search the cortex memory service for memories matching a query and inject them into context.
+description: Search the AstraMemory memory service for memories matching a query and inject them into context.
 ---
 
 # /recall
 
-Search cortex for memories matching the user's query and inject the top results into the conversation so the rest of the session can use them as grounding context.
+Search AstraMemory for memories matching the user's query and inject the top results into the conversation so the rest of the session can use them as grounding context.
 
 User query: $ARGUMENTS
 
 Workflow:
 
-1. Use the cortex MCP `search_memory` tool with:
+1. Use the AstraMemory MCP `search_memory` tool with:
    - `query` = the user's query above
    - `top_k` = 8
    - `mode` = "hybrid"
@@ -21,4 +21,4 @@ Workflow:
 
 If no memories match: say so plainly and suggest `/remember` to store something now.
 
-If MCP server is unreachable: hint that the cortex stack is down — point at `dotnet run --project src/MemoryService.AppHost`.
+If MCP server is unreachable: hint that the AstraMemory stack is down — point at `dotnet run --project src/MemoryService.AppHost`.

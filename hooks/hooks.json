@@ -6,7 +6,7 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/pre-compact-capture.sh\"",
-            "description": "cortex: auto-capture a pre-compaction summary so context survives compaction"
+            "description": "memory: auto-capture a pre-compaction summary so context survives compaction"
           }
         ]
       }
@@ -17,7 +17,7 @@
           {
             "type": "command",
             "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-end-summary.sh\"",
-            "description": "cortex: write a session summary memory at session end"
+            "description": "memory: write a session summary memory at session end"
           }
         ]
       }

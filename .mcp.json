@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "memory": {
+      "type": "http",
+      "url": "${MEMORY_MCP_URL}/mcp",
+      "headers": {
+        "Authorization": "ApiKey ${MEMORY_API_KEY}"
+      }
+    }
+  }
+}

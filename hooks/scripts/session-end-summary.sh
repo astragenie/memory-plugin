@@ -1,26 +1,30 @@
 #!/usr/bin/env bash
-# cortex session-end summary hook.
+# AstraMemory session-end summary hook.
 #
 # Fires when a Claude Code session ends. Reads the hook payload from stdin,
-# pulls the transcript, asks the assistant (via the cortex /memories/report
+# pulls the transcript, asks the assistant (via the AstraMemory /memories/report
 # endpoint, which already wraps the LLM) to produce a 5-bullet session
 # summary, and stores it as a memory of type=summary.
 #
 # Like pre-compact-capture, this never fails the hook chain. If anything is
-# missing — cortex offline, jq missing, transcript absent — we silently exit 0.
+# missing — AstraMemory offline, jq missing, transcript absent — we silently exit 0.
 
 set +e
 set -u
 
-CORTEX_API_URL="${CORTEX_API_URL:-http://localhost:5201}"
-CORTEX_API_KEY="${CORTEX_API_KEY:-dev-bootstrap-local}"
-MAX_TURNS="${CORTEX_SESSION_MAX_TURNS:-40}"
-MAX_CHARS="${CORTEX_SESSION_MAX_CHARS:-20000}"
+# Load profile (.env.local / .env.azuredev / .env / plugin.json defaultEnv).
+# shellcheck source=./_load-env.sh
+. "$(dirname "${BASH_SOURCE[0]}")/_load-env.sh"
+
+MEMORY_API_URL="${MEMORY_API_URL:-http://localhost:5201}"
+MEMORY_API_KEY="${MEMORY_API_KEY:-dev-bootstrap-local}"
+MAX_TURNS="${MEMORY_SESSION_MAX_TURNS:-40}"
+MAX_CHARS="${MEMORY_SESSION_MAX_CHARS:-20000}"
 
 payload="$(cat 2>/dev/null || true)"
 [ -z "$payload" ] && exit 0
 
-if ! curl -sS -o /dev/null -m 2 "${CORTEX_API_URL}/health"; then
+if ! curl -sS -o /dev/null -m 2 "${MEMORY_API_URL}/health"; then
   exit 0
 fi
 
@@ -53,9 +57,9 @@ content="$(printf 'Session summary (%s)\n\nProject: %s\nSession: %s\n\n%s\n' \
   "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$project_id" "$session_id" "$digest")"
 
 curl -sS -o /dev/null -m 5 \
-  -X POST "${CORTEX_API_URL}/memories" \
+  -X POST "${MEMORY_API_URL}/memories" \
   -H "Content-Type: application/json" \
-  -H "Authorization: ApiKey ${CORTEX_API_KEY}" \
+  -H "Authorization: ApiKey ${MEMORY_API_KEY}" \
   -d "$(jq -nc \
         --arg content "$content" \
         --arg project "$project_id" \

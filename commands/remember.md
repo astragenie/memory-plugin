@@ -1,10 +1,10 @@
 ---
-description: Store the supplied text as a memory in cortex with sensible defaults inferred from the current repo and context.
+description: Store the supplied text as a memory in AstraMemory with sensible defaults inferred from the current repo and context.
 ---
 
 # /remember
 
-Persist the supplied text into cortex so future sessions can recall it.
+Persist the supplied text into AstraMemory so future sessions can recall it.
 
 User input: $ARGUMENTS
 
@@ -17,7 +17,7 @@ Workflow:
    - **tags**: extract obvious topical tags from the body (e.g. handoffs, costs, perf, ux). Lowercase, slugified.
    - **importance**: 0.7 by default. 0.9 if user said "important" / "critical". 0.4 if it reads like an offhand observation.
 2. Strip any leading `[project:...]`, `[tag:...]`, `[type:...]` tokens after parsing — they're config, not body content.
-3. Call the cortex MCP `store_memory` tool with the assembled fields.
+3. Call the AstraMemory MCP `store_memory` tool with the assembled fields.
 4. Report back the new memory id, the inferred metadata, and a one-line confirmation. If dedup hit, say so and show the existing id.
 
-If MCP server is unreachable: tell the user the cortex stack is down.
+If MCP server is unreachable: tell the user the AstraMemory stack is down.

@@ -8,8 +8,8 @@ import { openBrowser } from '../lib/openBrowser.mjs';
 
 async function main() {
   if (process.argv.includes('--help') || process.argv.includes('-h')) {
-    console.log('Usage: cortex-login');
-    console.log('Set CORTEX_CLERK_AUTHORITY + CORTEX_CLERK_CLIENT_ID env vars first.');
+    console.log('Usage: memory-login');
+    console.log('Set MEMORY_CLERK_AUTHORITY + MEMORY_CLERK_CLIENT_ID env vars first.');
     return;
   }
 
@@ -54,7 +54,7 @@ async function main() {
     authority: cfg.authority,
     client_id: cfg.clientId,
   });
-  console.log('cortex-login: cached Clerk tokens at', expiresAt);
+  console.log('memory-login: cached Clerk tokens at', expiresAt);
 }
 
 function receiveCode(redirectUri, expectedState, openBrowserFn) {
@@ -81,7 +81,7 @@ function receiveCode(redirectUri, expectedState, openBrowserFn) {
     });
     server.on('error', (err) => {
       if (err.code === 'EADDRINUSE') {
-        process.stderr.write(`cortex-login: port ${port} is already in use. Free the port or set CORTEX_CLERK_REDIRECT_URI to use a different port.\n`);
+        process.stderr.write(`memory-login: port ${port} is already in use. Free the port or set MEMORY_CLERK_REDIRECT_URI to use a different port.\n`);
         process.exit(1);
       }
       reject(err);

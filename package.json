@@ -1,12 +1,12 @@
 {
-  "name": "cortex-plugin",
-  "version": "0.1.0",
-  "description": "Cortex Claude Code plugin: hooks + CLI for cortex-hosted memory service.",
+  "name": "memory-plugin",
+  "version": "0.2.0",
+  "description": "AstraMemory Claude Code plugin: hooks + CLI for the AstraMemory service.",
   "type": "module",
   "bin": {
-    "cortex-login": "./bin/cortex-login",
-    "cortex-refresh": "./bin/cortex-refresh",
-    "cortex-token": "./bin/cortex-token"
+    "memory-login": "./bin/memory-login",
+    "memory-refresh": "./bin/memory-refresh",
+    "memory-token": "./bin/memory-token"
   },
   "scripts": {
     "test": "node --test tests/*.test.mjs"

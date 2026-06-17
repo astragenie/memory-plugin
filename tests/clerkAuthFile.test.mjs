@@ -39,12 +39,12 @@ test('authFilePath — POSIX branch via mocked XDG_CONFIG_HOME', async () => {
 
   // On Linux: should use XDG_CONFIG_HOME
   // On Windows: should use APPDATA (APPDATA env may or may not be set)
-  // Either way the path must end in cortex/auth.json or cortex\auth.json
+  // Either way the path must end in memory/auth.json or memory\auth.json
   assert.ok(
-    p.endsWith('cortex/auth.json') || p.endsWith('cortex\\auth.json'),
-    `path "${p}" should end in cortex/auth.json`
+    p.endsWith('memory/auth.json') || p.endsWith('memory\\auth.json'),
+    `path "${p}" should end in memory/auth.json`
   );
-  assert.ok(p.includes('cortex'), 'path must contain cortex segment');
+  assert.ok(p.includes('memory'), 'path must contain memory segment');
 
   if (savedXdg === undefined) delete process.env.XDG_CONFIG_HOME;
   else process.env.XDG_CONFIG_HOME = savedXdg;
@@ -55,8 +55,8 @@ test('authFilePath — Windows path constructed correctly from APPDATA env', () 
   // without needing to change os.platform(). We build the expected path
   // the same way the module does and verify the pattern.
   const appdata = 'C:\\Users\\TestUser\\AppData\\Roaming';
-  const expected = join(appdata, 'cortex', 'auth.json');
-  assert.ok(expected.includes('cortex'), 'Windows path includes cortex');
+  const expected = join(appdata, 'memory', 'auth.json');
+  assert.ok(expected.includes('memory'), 'Windows path includes memory');
   assert.ok(expected.endsWith('auth.json'), 'Windows path ends with auth.json');
   assert.match(expected, /AppData.Roaming/, 'Windows path contains AppData\\Roaming');
 });
@@ -65,7 +65,7 @@ test('readAuth — returns null cleanly when auth.json is missing', async () => 
   // Override XDG_CONFIG_HOME to a non-existent dir so readAuth hits ENOENT.
   const savedXdg = process.env.XDG_CONFIG_HOME;
   const savedAppdata = process.env.APPDATA;
-  process.env.XDG_CONFIG_HOME = '/tmp/cortex-no-such-dir-' + Date.now();
+  process.env.XDG_CONFIG_HOME = '/tmp/memory-no-such-dir-' + Date.now();
   delete process.env.APPDATA;
 
   const { readAuth } = await import(`../lib/clerkAuthFile.mjs?nomissing=${Date.now()}`);
