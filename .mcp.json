@@ -4,7 +4,7 @@
       "type": "http",
       "url": "${MEMORY_MCP_URL}/mcp",
       "headers": {
-        "Authorization": "ApiKey ${MEMORY_API_KEY}"
+        "Authorization": "Bearer ${MEMORY_BEARER}"
       }
     }
   }
