@@ -18,26 +18,49 @@ durable session capture across compaction.
 
 ### Hooks
 
-- **PreCompact** — `hooks/scripts/pre-compact-capture.sh` runs right before
-  Claude Code compacts the conversation. Tails the last 20 user+assistant
-  turns from the live transcript, stores them as a `type=summary` memory
-  with `source=claude-code-precompact` and `tags=[claude-code, pre-compact,
-  session-digest]`. Substance survives the compaction window.
-- **SessionEnd** — `hooks/scripts/session-end-summary.sh` runs on session
-  close. Captures the last 40 turns as a `type=summary` memory with
-  `source=claude-code-session-end` so the next session can recall what
-  happened.
+- **PreCompact / SessionEnd / SubagentStop** — `hooks/scripts/*.sh` capture
+  the tail of the current transcript and POST it to the AstraMemory server
+  at `${MEMORY_API_URL}/ingest/transcript`. The server scrubs secrets,
+  stores the raw turns as a `summary` memory, and runs an LLM extractor
+  that emits typed atoms (`decision`, `fact`, `lesson`, `event`) linked to
+  prior memories via the graph. Server-side ingest extraction lands in a
+  follow-up release; until then the endpoint stores the raw digest and the
+  typed-atom + graph-edge pipeline is pending.
 
-Both hooks are best-effort: if AstraMemory is unreachable, jq is missing, or the
-transcript is gone, they silently `exit 0`. They never block compaction or
-session shutdown.
+  Hooks always `exit 0` — they never block compaction or session shutdown.
+  Failures (no Bearer cache, server down, jq missing) are silent. POSTs
+  make `MEMORY_INGEST_RETRIES` total attempts (default 2) before giving up
+  on 5xx; 4xx is final.
+
+  | Hook         | Max turns | Env override                  |
+  | ------------ | --------- | ----------------------------- |
+  | PreCompact   | 20        | `MEMORY_PRECOMPACT_MAX_TURNS` |
+  | SessionEnd   | 40        | `MEMORY_SESSION_MAX_TURNS`    |
+  | SubagentStop | 12        | `MEMORY_SUBAGENT_MAX_TURNS`   |
 
 ### MCP server registration
 
-`.mcp.json` declares the `memory` MCP server with `type: http`. The URL
-and Authorization header are resolved from process environment variables
-(`${MEMORY_MCP_URL}`, `${MEMORY_API_KEY}`) at Claude Code launch — see the
-**Profiles** section below for how those get set.
+`.mcp.json` declares the `memory` MCP server with `type: http`. The URL is
+resolved from `${MEMORY_MCP_URL}` at Claude Code launch — see the
+**Profiles** section below for how that gets set.
+
+The Authorization header is `Bearer ${MEMORY_BEARER}`. `MEMORY_BEARER` is a
+JWT minted by `memory-login` (one-time) and refreshed by `memory-refresh`.
+
+`.mcp.json` reads `MEMORY_BEARER` from your OS environment at Claude Code
+launch — it is NOT auto-populated. Export it from your shell rc:
+
+```bash
+export MEMORY_BEARER="$(memory-refresh)"
+```
+
+The MCP transport binds the token at Claude Code launch — long sessions can
+outlast the ~1h TTL; restart Claude Code or re-run `memory-refresh` then
+restart if the MCP server starts returning 401.
+
+Cached tokens live at `~/.config/memory/auth.json` (POSIX) or
+`%APPDATA%\memory\auth.json` (Windows). Move or delete the file to force a
+fresh `memory-login`.
 
 ## Profiles
 
@@ -49,10 +72,9 @@ The plugin ships two committed profiles. Pick one by setting
 | `local`    | You run the AstraMemory stack on `localhost` (default). | `http://localhost:5201`                                                                              | `http://localhost:5202`                                                                              |
 | `azuredev` | You hit the Azure-hosted gateway in centralus.       | `https://ca-yarp-dev.icymeadow-6c3aaa26.centralus.azurecontainerapps.io/memory-api`                  | `https://ca-yarp-dev.icymeadow-6c3aaa26.centralus.azurecontainerapps.io/memory-mcp`                  |
 
-Both endpoints route through the YARP gateway, which runs in `JwtOrApiKey`
-mode and enforces `AuthorizationPolicy=memory.read`. An ApiKey scoped to
-`memory.read` is accepted on the same Authorization header the local
-profile uses.
+Both endpoints route through the YARP gateway, which enforces
+`AuthorizationPolicy=memory.read`. Authentication uses a Bearer JWT issued
+by Clerk (obtained via `memory-login` and refreshed by `memory-refresh`).
 
 ### How the hook scripts pick a profile
 
@@ -99,18 +121,22 @@ profile):
 | `MEMORY_ENV`                     | (none)                  | Selects the `.env.<profile>` file |
 | `MEMORY_API_URL`                 | `http://localhost:5201` | API base used by hooks |
 | `MEMORY_MCP_URL`                 | `http://localhost:5202` | MCP base used by `.mcp.json` |
-| `MEMORY_API_KEY`                 | `dev-bootstrap-local`   | API key for `Authorization: ApiKey ...` |
+| `MEMORY_BEARER`                  | (resolved via memory-refresh) | Bearer token used by `.mcp.json` |
+| `MEMORY_INGEST_RETRIES`          | `2`                     | POST attempt budget per hook fire |
+| `MEMORY_INGEST_RETRY_SLEEP`      | `1`                     | Seconds between retries |
 | `MEMORY_PRECOMPACT_MAX_TURNS`    | `20`                    | Turns captured pre-compact |
 | `MEMORY_PRECOMPACT_MAX_CHARS`    | `12000`                 | Hard byte cap on the digest |
 | `MEMORY_SESSION_MAX_TURNS`       | `40`                    | Turns captured at session end |
 | `MEMORY_SESSION_MAX_CHARS`       | `20000`                 | Hard byte cap on the digest |
+| `MEMORY_SUBAGENT_MAX_TURNS`      | `12`                    | Turns captured for SubagentStop |
+| `MEMORY_SUBAGENT_MAX_CHARS`      | `8000`                  | Hard byte cap on SubagentStop digest |
 
 ## Requirements
 
 - For the `local` profile: AstraMemory stack running
   (`dotnet run --project src/MemoryService.AppHost`).
-- For the `azuredev` profile: a `MEMORY_API_KEY` scoped to `memory.read`
-  on the gateway. Anonymous calls return 401.
+- For the `azuredev` profile: a Clerk-issued Bearer JWT obtained via
+  `memory-login`. Anonymous calls return 401.
 - Hooks need `curl` and `jq` on the shell PATH. On Windows, run inside Git
   Bash or set `CLAUDE_BASH_PATH` to an MSYS bash. Without jq the hooks exit
   cleanly without recording anything. `jq` is also used to read
@@ -128,6 +154,18 @@ a thin UX layer on top:
   search behavior.
 
 Use both. They compose.
+
+## Upgrading from 0.2.x to 0.3.0
+
+`MEMORY_API_KEY` is gone; auth is Bearer-only.
+
+1. Run `memory-login` once if you haven't already (cached at `~/.config/memory/auth.json` or `%APPDATA%\memory\auth.json`).
+2. Add this line to your shell rc so `.mcp.json` can resolve the bearer at Claude Code launch:
+   ```bash
+   export MEMORY_BEARER="$(memory-refresh)"
+   ```
+3. Remove `MEMORY_API_KEY` from your shell env and any `.env` overrides.
+4. Restart Claude Code. The MCP server should authenticate via Bearer.
 
 ## Migrating from `cortex` plugin (pre-v0.2.0)
 

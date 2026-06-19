@@ -1,6 +1,6 @@
 {
   "name": "memory",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Slash commands + auto-capture hooks bridging Claude Code to the AstraMemory service. Wraps the MCP server with one-keystroke recall/store and durable session capture across compaction. Targets a local stack by default; release builds target the Azure-hosted gateway.",
   "author": {
     "name": "astra"
