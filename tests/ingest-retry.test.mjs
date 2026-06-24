@@ -6,7 +6,7 @@
 // echoes a fake token). The helper still loads _load-env.sh from its own
 // SCRIPT_DIR (the real hooks/scripts/), so we do not need to copy lib scripts
 // into the fake root. _load-env.sh tolerates missing .env files, and we pass
-// MEMORY_API_URL via env which takes precedence anyway.
+// ASTRAMEMORY_API_URL via env which takes precedence anyway.
 //
 // A one-shot HTTP server counts requests and replies with a configurable
 // status to drive the retry loop:
@@ -76,7 +76,7 @@ function runHook({ url, event, transcriptPath, pluginRoot, retries = 2 }) {
   return new Promise((resolve, reject) => {
     const env = {
       ...process.env,
-      MEMORY_API_URL: url,
+      ASTRAMEMORY_API_URL: url,
       MEMORY_INGEST_RETRIES: String(retries),
       MEMORY_INGEST_RETRY_SLEEP: '0',
       CLAUDE_PLUGIN_ROOT: pluginRoot,

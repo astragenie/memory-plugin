@@ -11,7 +11,7 @@
 import { test } from 'node:test';
 import { strict as assert } from 'node:assert';
 import { createServer } from 'node:http';
-import { spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import {
   mkdtempSync,
   mkdirSync,
@@ -92,6 +92,9 @@ function readTokens(home, env) {
 // Run helper: spawns memory-connect synchronously
 // ---------------------------------------------------------------------------
 
+// Async spawn (NOT spawnSync) — under spawnSync the Node event loop blocks,
+// so the in-process HTTP servers in these tests cannot service the child's
+// fetch calls, producing a deadlock that times the test file out at 60s.
 function run(args, { home, cwd, env: extraEnv = {} } = {}) {
   /** @type {Record<string, string | undefined>} */
   const env = {
@@ -102,11 +105,26 @@ function run(args, { home, cwd, env: extraEnv = {} } = {}) {
   // Remove any real ASTRAMEMORY_ENV so tests control it via --env flag
   delete env['ASTRAMEMORY_ENV'];
 
-  return spawnSync(process.execPath, [BIN, ...args], {
-    encoding: 'utf8',
-    cwd: cwd ?? repoRoot,
-    env,
-    timeout: 15000,
+  return new Promise((resolve, reject) => {
+    const child = spawn(process.execPath, [BIN, ...args], {
+      cwd: cwd ?? repoRoot,
+      env,
+    });
+    let stdout = '';
+    let stderr = '';
+    child.stdout.on('data', (b) => (stdout += b.toString()));
+    child.stderr.on('data', (b) => (stderr += b.toString()));
+    const timer = setTimeout(() => {
+      child.kill('SIGKILL');
+    }, 15000);
+    child.on('error', (err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+    child.on('close', (status, signal) => {
+      clearTimeout(timer);
+      resolve({ stdout, stderr, status, signal });
+    });
   });
 }
 
@@ -144,7 +162,7 @@ test('happy path: 200 redeem writes tokens file and exits 0', async (t) => {
   // Seed profiles.json
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
-  const result = run([CODE, '--env', ENV, '--workspace', WS_ID], { home });
+  const result = await run([CODE, '--env', ENV, '--workspace', WS_ID], { home });
 
   assert.equal(result.status, 0, `should exit 0; stderr=${result.stderr}`);
   assert.ok(result.stdout.includes('✓'), `stdout should contain ✓; got: ${result.stdout}`);
@@ -188,7 +206,7 @@ test('410 expired code: exits 1 and does not write token file', async (t) => {
 
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
-  const result = run([CODE, '--env', ENV, '--workspace', 'some-workspace'], { home });
+  const result = await run([CODE, '--env', ENV, '--workspace', 'some-workspace'], { home });
 
   assert.equal(result.status, 1, `should exit 1 on 410; stderr=${result.stderr}`);
   assert.ok(result.stderr.includes('expired'), `stderr should mention 'expired'; got: ${result.stderr}`);
@@ -202,14 +220,14 @@ test('410 expired code: exits 1 and does not write token file', async (t) => {
 // Test: network failure — exit 2
 // ---------------------------------------------------------------------------
 
-test('network failure: exits 2 when server is unreachable', (t) => {
+test('network failure: exits 2 when server is unreachable', async (t) => {
   const home = makeTmpHome(t);
   const ENV = 'testenv';
 
   // Point at a port nothing is listening on
   writeProfiles(home, { [ENV]: { apiUrl: 'http://127.0.0.1:1' } });
 
-  const result = run(['ABCD-0001', '--env', ENV, '--workspace', 'ws'], { home });
+  const result = await run(['ABCD-0001', '--env', ENV, '--workspace', 'ws'], { home });
 
   assert.equal(result.status, 2, `should exit 2 on network failure; stderr=${result.stderr}`);
 });
@@ -218,13 +236,13 @@ test('network failure: exits 2 when server is unreachable', (t) => {
 // Test: missing profile — exit 4
 // ---------------------------------------------------------------------------
 
-test('missing profile: exits 4 when env not in profiles.json', (t) => {
+test('missing profile: exits 4 when env not in profiles.json', async (t) => {
   const home = makeTmpHome(t);
 
   // profiles.json exists but does not have the requested env
   writeProfiles(home, { prod: { apiUrl: 'https://api.example.com' } });
 
-  const result = run(['ABCD-0001', '--env', 'staging', '--workspace', 'ws'], { home });
+  const result = await run(['ABCD-0001', '--env', 'staging', '--workspace', 'ws'], { home });
 
   assert.equal(result.status, 4, `should exit 4 on missing profile; stderr=${result.stderr}`);
   assert.ok(
@@ -237,11 +255,11 @@ test('missing profile: exits 4 when env not in profiles.json', (t) => {
 // Test: missing profiles.json entirely — exit 4
 // ---------------------------------------------------------------------------
 
-test('missing profiles.json: exits 4 when file does not exist', (t) => {
+test('missing profiles.json: exits 4 when file does not exist', async (t) => {
   const home = makeTmpHome(t);
   // Do NOT write profiles.json
 
-  const result = run(['ABCD-0001', '--env', 'prod', '--workspace', 'ws'], { home });
+  const result = await run(['ABCD-0001', '--env', 'prod', '--workspace', 'ws'], { home });
 
   assert.equal(result.status, 4, `should exit 4 when profiles.json missing; stderr=${result.stderr}`);
 });
@@ -275,7 +293,7 @@ test('workspaceId defaults to basename of cwd', async (t) => {
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
   // Run with cwd = repoRoot so we can predict the workspace name
-  const result = run(['ABCD-1111', '--env', ENV], { home, cwd: repoRoot });
+  const result = await run(['ABCD-1111', '--env', ENV], { home, cwd: repoRoot });
 
   assert.equal(result.status, 0, `should exit 0; stderr=${result.stderr}`);
 
@@ -328,7 +346,7 @@ test('atomic write: existing workspaceId entries preserved when appending new', 
 
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
-  const result = run(['ABCD-2222', '--env', ENV, '--workspace', 'workspace-2'], { home });
+  const result = await run(['ABCD-2222', '--env', ENV, '--workspace', 'workspace-2'], { home });
 
   assert.equal(result.status, 0, `should exit 0; stderr=${result.stderr}`);
 
@@ -368,7 +386,7 @@ test('masking: success line never reveals more than last 4 chars of apiKey', asy
 
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
-  const result = run(['ABCD-3333', '--env', ENV, '--workspace', 'ws'], { home });
+  const result = await run(['ABCD-3333', '--env', ENV, '--workspace', 'ws'], { home });
 
   assert.equal(result.status, 0, `should exit 0; stderr=${result.stderr}`);
 
@@ -415,7 +433,7 @@ test('--url override: bypasses profiles.json lookup', async (t) => {
   });
   t.after(() => srv.close());
 
-  const result = run(
+  const result = await run(
     ['ABCD-4444', '--env', ENV, '--url', srv.url, '--workspace', 'ws-override'],
     { home }
   );
@@ -454,7 +472,7 @@ test('handshake soft-fail: exits 0 even when handshake POST returns 500', async 
 
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
-  const result = run(['ABCD-5555', '--env', ENV, '--workspace', 'ws-soft'], { home });
+  const result = await run(['ABCD-5555', '--env', ENV, '--workspace', 'ws-soft'], { home });
 
   assert.equal(result.status, 0, `should exit 0 even on handshake failure; stderr=${result.stderr}`);
   assert.ok(result.stderr.includes('warning'), `stderr should contain warning about handshake`);
@@ -491,7 +509,7 @@ test('structured log: stderr contains JSON log line for ok path', async (t) => {
 
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
-  const result = run(['ABCD-6666', '--env', ENV, '--workspace', 'ws-log'], { home });
+  const result = await run(['ABCD-6666', '--env', ENV, '--workspace', 'ws-log'], { home });
 
   assert.equal(result.status, 0, `should exit 0; stderr=${result.stderr}`);
 
@@ -522,7 +540,7 @@ test('structured log: stderr contains JSON log line for expired path', async (t)
 
   writeProfiles(home, { [ENV]: { apiUrl: srv.url } });
 
-  const result = run(['ZZZZ-7777', '--env', ENV, '--workspace', 'ws'], { home });
+  const result = await run(['ZZZZ-7777', '--env', ENV, '--workspace', 'ws'], { home });
 
   assert.equal(result.status, 1);
   const lines = result.stderr.split('\n').filter(l => l.trim().startsWith('{'));
@@ -536,12 +554,12 @@ test('structured log: stderr contains JSON log line for expired path', async (t)
 // Test: structured log emitted for profile missing (exit 4) path
 // ---------------------------------------------------------------------------
 
-test('structured log: stderr contains JSON log line for missing profile path', (t) => {
+test('structured log: stderr contains JSON log line for missing profile path', async (t) => {
   const home = makeTmpHome(t);
 
   writeProfiles(home, { prod: { apiUrl: 'https://x.example.com' } });
 
-  const result = run(['ABCD-8888', '--env', 'notexist', '--workspace', 'ws'], { home });
+  const result = await run(['ABCD-8888', '--env', 'notexist', '--workspace', 'ws'], { home });
 
   assert.equal(result.status, 4);
   const lines = result.stderr.split('\n').filter(l => l.trim().startsWith('{'));

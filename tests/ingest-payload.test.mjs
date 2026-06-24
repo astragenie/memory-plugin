@@ -92,7 +92,7 @@ function runHook({ url, event, transcriptPath, pluginRoot, sessionId, retries = 
   return new Promise((resolve, reject) => {
     const env = {
       ...process.env,
-      MEMORY_API_URL: url,
+      ASTRAMEMORY_API_URL: url,
       MEMORY_INGEST_RETRIES: String(retries),
       MEMORY_INGEST_RETRY_SLEEP: '0',
       CLAUDE_PLUGIN_ROOT: pluginRoot,
