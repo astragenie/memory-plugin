@@ -3,9 +3,9 @@
 // Subcommands: ingest | recall | remember | health | config | doctor | connect
 // Global: --provider local|saas|auto  (parsed, stored, passed to subcommands)
 //         --help | -h                  (prints usage)
-//         --version                    (prints 0.4.0-rc.1)
+//         --version                    (prints 0.4.0)
 
-const VERSION = '0.4.0-rc.1';
+const VERSION = '0.4.0';
 
 const SUBCOMMANDS = ['ingest', 'recall', 'remember', 'health', 'config', 'doctor', 'connect'] as const;
 type Subcommand = typeof SUBCOMMANDS[number];

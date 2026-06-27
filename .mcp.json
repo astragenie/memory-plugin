@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "memory": {
+    "astramem": {
       "type": "http",
-      "url": "${MEMORY_MCP_URL}/mcp",
+      "url": "${MEMORY_API_URL}/mcp",
       "headers": {
         "Authorization": "Bearer ${MEMORY_BEARER}"
       }
