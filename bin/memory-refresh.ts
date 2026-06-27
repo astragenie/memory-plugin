@@ -1,0 +1,55 @@
+#!/usr/bin/env bun
+import { URLSearchParams } from 'node:url';
+import { readAuth, writeAuth } from '../lib/clerkAuthFile.ts';
+
+const REFRESH_THRESHOLD_SECONDS = 300; // refresh if less than 5 min remaining
+
+async function main(): Promise<void> {
+  const auth = await readAuth();
+  if (!auth) {
+    console.error('memory-refresh: no cached tokens. Run memory-login first.');
+    process.exit(2);
+  }
+  const force = process.argv.includes('--force');
+  const now = Math.floor(Date.now() / 1000);
+  if (!force && auth.expires_at && (auth.expires_at - now) > REFRESH_THRESHOLD_SECONDS) {
+    // Still valid; print current access token and exit 0.
+    process.stdout.write(auth.access_token);
+    return;
+  }
+  if (!auth.refresh_token) {
+    console.error('memory-refresh: cached tokens have no refresh_token. Re-run memory-login.');
+    process.exit(3);
+  }
+  const resp = await fetch(`${auth.authority}/oauth/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: auth.refresh_token,
+      client_id: auth.client_id ?? '',
+    })
+  });
+  if (!resp.ok) {
+    const t = await resp.text();
+    console.error(`memory-refresh: refresh failed: ${resp.status} ${t}`);
+    process.exit(4);
+  }
+  const tokens = await resp.json() as {
+    access_token: string;
+    refresh_token?: string;
+    id_token?: string;
+    expires_in?: number;
+  };
+  const next = {
+    ...auth,
+    access_token: tokens.access_token,
+    refresh_token: tokens.refresh_token ?? auth.refresh_token,
+    id_token: tokens.id_token ?? auth.id_token,
+    expires_at: Math.floor(Date.now() / 1000) + (tokens.expires_in ?? 3600),
+  };
+  await writeAuth(next);
+  process.stdout.write(next.access_token);
+}
+
+main().catch(e => { console.error((e as Error).message || e); process.exit(1); });

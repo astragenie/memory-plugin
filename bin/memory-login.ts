@@ -1,0 +1,103 @@
+#!/usr/bin/env bun
+import http from 'node:http';
+import { URL, URLSearchParams } from 'node:url';
+import { resolveClerkConfig } from '../lib/clerkConfig.ts';
+import { generateCodeVerifier, generateCodeChallenge, generateState } from '../lib/pkce.ts';
+import { writeAuth } from '../lib/clerkAuthFile.ts';
+import { openBrowser } from '../lib/openBrowser.ts';
+
+async function main(): Promise<void> {
+  if (process.argv.includes('--help') || process.argv.includes('-h')) {
+    console.log('Usage: memory-login');
+    console.log('Set MEMORY_CLERK_AUTHORITY + MEMORY_CLERK_CLIENT_ID env vars first.');
+    return;
+  }
+
+  const cfg = resolveClerkConfig();
+  const verifier = generateCodeVerifier();
+  const challenge = generateCodeChallenge(verifier);
+  const state = generateState();
+
+  const authUrl = new URL(cfg.authorizationEndpoint);
+  authUrl.searchParams.set('response_type', 'code');
+  authUrl.searchParams.set('client_id', cfg.clientId);
+  authUrl.searchParams.set('redirect_uri', cfg.redirectUri);
+  authUrl.searchParams.set('scope', 'openid profile email offline_access');
+  authUrl.searchParams.set('state', state);
+  authUrl.searchParams.set('code_challenge', challenge);
+  authUrl.searchParams.set('code_challenge_method', 'S256');
+
+  const code = await receiveCode(cfg.redirectUri, state, () => openBrowser(authUrl.toString()));
+
+  const tokenResp = await fetch(cfg.tokenEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'authorization_code',
+      code,
+      redirect_uri: cfg.redirectUri,
+      client_id: cfg.clientId,
+      code_verifier: verifier,
+    })
+  });
+  if (!tokenResp.ok) {
+    const t = await tokenResp.text();
+    throw new Error(`Token exchange failed: ${tokenResp.status} ${t}`);
+  }
+  const tokens = await tokenResp.json() as {
+    access_token: string;
+    refresh_token?: string;
+    id_token?: string;
+    expires_in?: number;
+  };
+  const expiresAt = Math.floor(Date.now() / 1000) + (tokens.expires_in ?? 3600);
+  await writeAuth({
+    access_token: tokens.access_token,
+    refresh_token: tokens.refresh_token,
+    id_token: tokens.id_token,
+    expires_at: expiresAt,
+    authority: cfg.authority,
+    client_id: cfg.clientId,
+  });
+  console.log('memory-login: cached Clerk tokens at', expiresAt);
+}
+
+function receiveCode(
+  redirectUri: string,
+  expectedState: string,
+  openBrowserFn: () => void
+): Promise<string> {
+  const u = new URL(redirectUri);
+  const port = Number(u.port);
+  const path = u.pathname;
+  return new Promise((resolve, reject) => {
+    const server = http.createServer((req, res) => {
+      const url = new URL(req.url!, redirectUri);
+      if (url.pathname !== path) {
+        res.writeHead(404); res.end(); return;
+      }
+      const code = url.searchParams.get('code');
+      const state = url.searchParams.get('state');
+      if (!code || state !== expectedState) {
+        res.writeHead(400); res.end('Invalid state or code');
+        reject(new Error('state mismatch'));
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      res.end('<html><body><h2>You may close this window.</h2></body></html>');
+      server.close();
+      resolve(code);
+    });
+    server.on('error', (err: NodeJS.ErrnoException) => {
+      if (err.code === 'EADDRINUSE') {
+        process.stderr.write(`memory-login: port ${port} is already in use. Free the port or set MEMORY_CLERK_REDIRECT_URI to use a different port.\n`);
+        process.exit(1);
+      }
+      reject(err);
+    });
+    server.listen(port, '127.0.0.1', () => openBrowserFn());
+    setTimeout(() => { server.close(); reject(new Error('login timeout')); }, 5 * 60 * 1000);
+  });
+}
+
+main().catch(e => { console.error((e as Error).message || e); process.exit(1); });
