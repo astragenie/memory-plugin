@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.4.0-wave3 — 2026-06-27 (integration + docs)
+
+### Renamed
+- **Package renamed** to `@astragenie/astramem-plugin` (was `@astragenie/memory-plugin`).
+  Plugin manifest `name` changed to `"astramem"`. Slash commands: `/memory:recall` →
+  `/recall`, `/memory:remember` → `/remember`.
+
+### Migrated
+- **Codebase migrated from `.mjs` → TypeScript + Bun.** All `lib/*.mjs` and `bin/*.mjs`
+  files converted to `.ts` with strict-mode TypeScript. Shebang `#!/usr/bin/env bun` enables
+  direct `.ts` execution — no build step, no `dist/`. Test runner changed from `node --test`
+  to Vitest.
+
+### Added
+- **`bin/astramem` CLI with 7 subcommands:**
+  `ingest` / `recall` / `remember` / `health` / `config` / `doctor` / `connect`.
+  Run `astramem --help` for the full flag reference.
+- **Provider selector** (`src/lib/selector.ts`): resolution order — `--provider` flag →
+  `ASTRAMEM_PROVIDER` env → `config.json` → `auto` (probe local, fall back to SaaS).
+  Probe result cached in-process for 5 seconds.
+- **Unified config directory**: `~/.config/astramem/` on POSIX, `%APPDATA%\Astramem\` on
+  Windows. Config, secrets, and ingest log all colocated. Legacy `~/.astramemory/` paths
+  remain readable as migration fallback.
+- **Bearer scrub regex** applied before every write to stdout, stderr, and `ingest.log`:
+  matches `Bearer [32-128 hex chars]` and sensitive JSON keys
+  (`api_key`, `token`, `bearer`, `secret`, `password`).
+- **Fail-silent ingest log**: every ingest attempt (success or error) appends a scrubbed
+  one-line entry to `ingest.log`. Provider errors never propagate to the calling process.
+- **10 MB log rotation**: on next write when `ingest.log` exceeds 10 MB, the file is renamed
+  to `ingest.log.1` (overwriting any prior backup) and a fresh log is started.
+- **Back-compat bin aliases**: `astramem-login`, `astramem-refresh`, `astramem-token`,
+  `astramem-connect` added as forward-compat aliases. Legacy `memory-*` bins remain working
+  as shims.
+- **`commands/recall.md` + `commands/remember.md`** rewritten to invoke `bin/astramem` via
+  `bun ${CLAUDE_PLUGIN_ROOT}/bin/astramem recall|remember` instead of the MCP call path.
+
+### Deprecated
+- `ASTRAMEMORY_API_URL` and `ASTRAMEMORY_API_KEY` raw env vars accepted through v1.6;
+  **removed at v1.7**. Migrate: run `astramem connect <code>` to write profile files.
+
 ## 0.4.1 — 2026-06-22
 
 ### Fixed
