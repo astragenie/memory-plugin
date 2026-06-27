@@ -1,330 +1,235 @@
-# memory plugin
+# @astragenie/astramem-plugin
 
-Slash commands + auto-capture hooks bridging Claude Code to the AstraMemory
-service. Wraps the existing MCP server with one-keystroke recall/store and
-durable session capture across compaction.
-
-## What's in it
-
-### Slash commands
-
-- `/recall <query>` — searches AstraMemory for memories matching the query and
-  injects the top results into context. Uses the AstraMemory MCP `search_memory`
-  tool. Honors inline filters like "in loop" / "for crew" → `project_id`,
-  "handoffs" / "cost-reports" → `tags`.
-- `/remember <text>` — stores the supplied text as a memory in AstraMemory with
-  metadata inferred from context (project = repo name, tags = topical
-  keywords, type = note / decision / fact based on phrasing).
-
-### Hooks
-
-- **PreCompact / SessionEnd / SubagentStop** — `hooks/scripts/*.sh` capture
-  the tail of the current transcript and POST it to the AstraMemory server
-  at `${MEMORY_API_URL}/ingest/transcript`. The server scrubs secrets,
-  stores the raw turns as a `summary` memory, and runs an LLM extractor
-  that emits typed atoms (`decision`, `fact`, `lesson`, `event`) linked to
-  prior memories via the graph. Server-side ingest extraction lands in a
-  follow-up release; until then the endpoint stores the raw digest and the
-  typed-atom + graph-edge pipeline is pending.
-
-  Hooks always `exit 0` — they never block compaction or session shutdown.
-  Failures (no Bearer cache, server down, jq missing) are silent. POSTs
-  make `MEMORY_INGEST_RETRIES` total attempts (default 2) before giving up
-  on 5xx; 4xx is final.
-
-  | Hook         | Max turns | Env override                  |
-  | ------------ | --------- | ----------------------------- |
-  | PreCompact   | 20        | `MEMORY_PRECOMPACT_MAX_TURNS` |
-  | SessionEnd   | 40        | `MEMORY_SESSION_MAX_TURNS`    |
-  | SubagentStop | 12        | `MEMORY_SUBAGENT_MAX_TURNS`   |
-
-### MCP server registration
-
-`.mcp.json` declares the `memory` MCP server with `type: http`. The URL is
-resolved from `${MEMORY_MCP_URL}` at Claude Code launch — see the
-**Profiles** section below for how that gets set.
-
-The Authorization header is `Bearer ${MEMORY_BEARER}`. `MEMORY_BEARER` is a
-JWT minted by `memory-login` (one-time) and refreshed by `memory-refresh`.
-
-`.mcp.json` reads `MEMORY_BEARER` from your OS environment at Claude Code
-launch — it is NOT auto-populated. Export it from your shell rc:
-
-```bash
-export MEMORY_BEARER="$(memory-refresh)"
-```
-
-The MCP transport binds the token at Claude Code launch — long sessions can
-outlast the ~1h TTL; restart Claude Code or re-run `memory-refresh` then
-restart if the MCP server starts returning 401.
-
-Cached tokens live at `~/.config/memory/auth.json` (POSIX) or
-`%APPDATA%\memory\auth.json` (Windows). Move or delete the file to force a
-fresh `memory-login`.
-
-## Local backend (optional)
-
-The plugin can be redirected from the AstraMemory SaaS endpoint to a local
-daemon. See [astramemory-local](https://github.com/astragenie/astramemory-local)
-for setup. Once installed:
-
-```bash
-export MEMORY_API_URL=http://127.0.0.1:7777
-export MEMORY_BEARER=$(astra-memory token print)
-```
-
-Then restart Claude Code. All hooks continue to function unchanged — they
-POST to the local daemon instead of the cloud.
-
-## Pair a workstation (device-flow)
-
-From v0.4.0 you can pair a workstation to an AstraMemory environment without
-copying API keys through clipboard or env vars.
-
-**Steps:**
-
-1. In the AstraMemory dashboard click **"Connect this machine"** — this mints a
-   short-lived claim code (`ABCD-1234`) and opens a status panel.
-2. Run the CLI in the repo you want to pair:
-
-   ```
-   # In the dashboard: click "Connect this machine" → copy code
-   memory-connect ABCD-1234 --env prod
-   ```
-
-3. The dashboard status panel flips to **✓ first event received** within seconds.
-
-**Options:**
-
-```
-memory-connect <code> [--env <env>] [--url <override>] [--workspace <name>]
-
-  --env <env>         Environment to target. Resolution order:
-                        --env flag > $ASTRAMEMORY_ENV > "prod"
-  --url <url>         Override the API URL directly (skips profiles.json lookup).
-  --workspace <name>  Workspace identifier written into the token file.
-                      Default: basename of the current working directory.
-```
-
-**Exit codes:** `0` success · `1` code expired/invalid · `2` network failure ·
-`3` filesystem write failure · `4` profile not found.
-
-### `~/.astramemory/profiles.json`
-
-Seed this file once per machine. Each key is an env name:
-
-```json
-{ "prod":  { "apiUrl": "https://api.astramemory.com" },
-  "local": { "apiUrl": "http://localhost:5201" } }
-```
-
-`memory-connect` reads `profiles.json[env].apiUrl` unless `--url` is passed.
-
-### `~/.astramemory/tokens.<env>.json`
-
-Written (atomically, preserving existing entries) after a successful redeem.
-Read by the FEAT-280 plugin hooks to resolve `apiKey` per workspace:
-
-```json
-{
-  "my-repo": {
-    "apiKey": "sk-...",
-    "label": "claim-20260622120000",
-    "tenantId": "tenant-abc123",
-    "repoPath": "/home/user/work/my-repo",
-    "pairedAt": "2026-06-22T12:00:00.000Z"
-  }
-}
-```
-
-Each key is the `workspaceId` (defaults to `basename(cwd)`). Multiple workspaces
-per env are supported — pairing a second repo appends a new key without touching
-existing entries.
+Claude Code plugin bridging the `astramem` CLI, provider selector, and auto-capture hooks to
+AstraMemory — local or cloud.
 
 ---
 
-## Profiles
-
-The plugin ships two committed profiles. Pick one by setting
-`MEMORY_ENV` in your shell before launching Claude Code.
-
-| Profile    | When                                                 | API URL                                                                                              | MCP URL                                                                                              |
-| ---------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `local`    | You run the AstraMemory stack on `localhost` (default). | `http://localhost:5201`                                                                              | `http://localhost:5202`                                                                              |
-| `azuredev` | You hit the Azure-hosted gateway in centralus.       | `https://ca-yarp-dev.icymeadow-6c3aaa26.centralus.azurecontainerapps.io/memory-api`                  | `https://ca-yarp-dev.icymeadow-6c3aaa26.centralus.azurecontainerapps.io/memory-mcp`                  |
-
-Both endpoints route through the YARP gateway, which enforces
-`AuthorizationPolicy=memory.read`. Authentication uses a Bearer JWT issued
-by Clerk (obtained via `memory-login` and refreshed by `memory-refresh`).
-
-### How the hook scripts pick a profile
-
-`hooks/scripts/_load-env.sh` is sourced first thing in every hook. It walks
-the following resolution order, first match wins:
-
-1. `$MEMORY_ENV` set in the shell → `${CLAUDE_PLUGIN_ROOT}/.env.$MEMORY_ENV`
-2. `${CLAUDE_PLUGIN_ROOT}/.env` (gitignored user override)
-3. `.defaultEnv` from `.claude-plugin/plugin.json` → `.env.<defaultEnv>`
-4. `.env.local` (hard fallback)
-
-### How `.mcp.json` picks a profile
-
-Claude Code resolves `${...}` substitutions in `.mcp.json` from the OS
-environment at plugin load. The plugin's `.env.*` files are not auto-sourced
-into Claude Code's environment, so for the MCP transport you have two
-options:
-
-- **Export the values in your shell / system env before launching Claude**
-  (or set them via your shell rc / Windows User Variables).
-- **Use the gitignored `.env`** in combination with a shell loader you
-  already run (e.g. `direnv`, `dotenv-cli`, `Set-PsEnv`).
-
-The hook scripts don't need this — they source `.env.*` themselves.
-
-### Releases
-
-`defaultEnv` in `.claude-plugin/plugin.json` controls what the hooks fall
-back to when no `MEMORY_ENV` and no `.env` override is present. The
-release flow is:
-
-- `main` branch keeps `defaultEnv: "local"` so contributors hit their
-  local stack.
-- Before tagging a release, flip `defaultEnv` to `"azuredev"` so installed
-  copies of the plugin reach the hosted gateway without per-user config.
-
-## Configuration
-
-### Profile files (v0.4.0+, recommended)
-
-As of v0.4.0, hooks resolve the API URL and workspace key from
-`~/.astramemory/` profile files written by `memory-connect`
-(`bunx @astragenie/astra@latest connect <code>`).
-
-**`~/.astramemory/profiles.json`** — one entry per named environment:
-
-```json
-{ "prod":  { "apiUrl": "https://api.astramemory.com" },
-  "local": { "apiUrl": "http://localhost:5201" } }
-```
-
-**`~/.astramemory/tokens.<env>.json`** — per-workspace API keys, written
-automatically by `memory-connect`:
-
-```json
-{ "<workspace>": { "apiKey": "sk-...", "label": "my-project", "repoPath": "/work/my-repo" } }
-```
-
-`<workspace>` is the basename of the repo directory (e.g. `memory` for
-`/work/mega/memory`). The active env is selected by `ASTRAMEMORY_ENV`
-(default: `prod`).
-
-Resolution order (highest precedence first):
-
-1. Explicit `ASTRAMEMORY_API_URL` / `ASTRAMEMORY_API_KEY` env vars
-   (**deprecated** — accepted through v1.6, removed at v1.7; see migration note below).
-2. Profile file lookup: `profiles.json[$ASTRAMEMORY_ENV].apiUrl` +
-   `tokens.$ASTRAMEMORY_ENV.json[<workspace>].apiKey`.
-3. Hard defaults: `http://localhost:5201` / `dev-bootstrap-local`.
-
-### Environment variables
-
-| Var                              | Default                 | Purpose |
-| -------------------------------- | ----------------------- | ------- |
-| `ASTRAMEMORY_ENV`                | `prod`                  | Selects the active profile in `~/.astramemory/profiles.json` |
-| `ASTRAMEMORY_API_URL`            | (from profile or localhost) | Override API base URL (deprecated — use profile files) |
-| `ASTRAMEMORY_API_KEY`            | (from profile or default) | Override API key (deprecated — use profile files) |
-| `ASTRAMEMORY_HOOK_DEBUG`         | `0`                     | Set to `1` to emit one stderr line per hook with resolved env/url/key_source/outcome |
-| `MEMORY_ENV`                     | (none)                  | Selects the legacy `.env.<profile>` file (existing plugin-file profiles) |
-| `MEMORY_API_URL`                 | `http://localhost:5201` | Legacy API base (overridden by `ASTRAMEMORY_API_URL` if set) |
-| `MEMORY_MCP_URL`                 | `http://localhost:5202` | MCP base used by `.mcp.json` |
-| `MEMORY_BEARER`                  | (resolved via memory-refresh) | Bearer token used by `.mcp.json` |
-| `MEMORY_INGEST_RETRIES`          | `2`                     | POST attempt budget per hook fire |
-| `MEMORY_INGEST_RETRY_SLEEP`      | `1`                     | Seconds between retries |
-| `MEMORY_PRECOMPACT_MAX_TURNS`    | `20`                    | Turns captured pre-compact |
-| `MEMORY_PRECOMPACT_MAX_CHARS`    | `12000`                 | Hard byte cap on the digest |
-| `MEMORY_SESSION_MAX_TURNS`       | `40`                    | Turns captured at session end |
-| `MEMORY_SESSION_MAX_CHARS`       | `20000`                 | Hard byte cap on the digest |
-| `MEMORY_SUBAGENT_MAX_TURNS`      | `12`                    | Turns captured for SubagentStop |
-| `MEMORY_SUBAGENT_MAX_CHARS`      | `8000`                  | Hard byte cap on SubagentStop digest |
-
-### Hook debug output
-
-Set `ASTRAMEMORY_HOOK_DEBUG=1` in your shell to trace hook resolution:
-
-```
-[astramemory-hook] script=pre-compact-capture env=prod workspace=memory url=https://api.astramemory.com key_source=profile outcome=ok
-```
-
-Fields: `script` — which hook fired; `env` — active profile name;
-`workspace` — repo basename; `url` — resolved API URL (never the key);
-`key_source` — `env` (explicit env var) | `profile` | `legacy_default`;
-`outcome` — `ok` | `skipped:<reason>`.
-
-### Migrating from env-vars to profile files
-
-> **Deprecation notice:** `ASTRAMEMORY_API_URL` and `ASTRAMEMORY_API_KEY`
-> raw env vars are accepted through **v1.6** and will be **removed at v1.7**.
-> Migrate before upgrading past v1.6.
-
-To migrate, run `memory-connect` (FEAT-279 CLI) once per workstation:
+## Quick start
 
 ```bash
-bunx @astragenie/astra@latest connect <code>
+# 1. Install Bun (https://bun.sh) if not already present
+curl -fsSL https://bun.sh/install | bash
+
+# 2. Install dependencies
+bun install
+
+# 3. Link the bin so `astramem` is on your PATH
+bun link
+
+# 4. Pair this workstation to a provider
+astramem connect          # local daemon (astramem-local must be running)
+# OR — if you have a dashboard claim code:
+astramem connect ABCD-1234 --env prod
 ```
 
-`memory-connect` writes `~/.astramemory/profiles.json` and
-`~/.astramemory/tokens.prod.json` automatically. After running it:
+After pairing, Claude Code hooks and slash commands (`/recall`, `/remember`) resolve the provider
+automatically. No manual env-var export required for day-to-day use.
 
-1. Verify hooks resolve correctly: `ASTRAMEMORY_HOOK_DEBUG=1` in your shell,
-   then trigger a PreCompact — look for `key_source=profile` in the debug line.
-2. Remove `ASTRAMEMORY_API_URL` and `ASTRAMEMORY_API_KEY` from your shell rc
-   and any `.env` overrides.
-3. Restart Claude Code.
+---
 
-## Requirements
+## Slash commands
 
-- For the `local` profile: AstraMemory stack running
-  (`dotnet run --project src/MemoryService.AppHost`).
-- For the `azuredev` profile: a Clerk-issued Bearer JWT obtained via
-  `memory-login`. Anonymous calls return 401.
-- Hooks need `curl` and `jq` on the shell PATH. On Windows, run inside Git
-  Bash or set `CLAUDE_BASH_PATH` to an MSYS bash. Without jq the hooks exit
-  cleanly without recording anything. `jq` is also used to read
-  `defaultEnv` from `plugin.json` — if it's missing the loader falls back
-  straight to `.env.local`.
+| Command | What it does |
+| --- | --- |
+| `/recall <query>` | Searches astramem and injects the top 5 hits into context. |
+| `/remember <text>` | Stores the text as a typed memory (`fact`, `decision`, `note`, etc.). |
 
-## Relationship to MCP
+Both commands invoke `bin/astramem` internally via `bun ${CLAUDE_PLUGIN_ROOT}/bin/astramem`.
+If the provider is unreachable they suggest `astramem health` for diagnosis.
 
-The MCP server (`src/MemoryService.Mcp`) is the data plane. This plugin is
-a thin UX layer on top:
+---
 
-- Slash commands give you keyboard-fast access to MCP tools without the
-  model having to decide whether to call them.
-- Hooks give you deterministic durable capture independent of the model's
-  search behavior.
+## `astramem` CLI — sub-commands
 
-Use both. They compose.
+| Sub-command | Description |
+| --- | --- |
+| `ingest` | Fire-and-forget: ingest a JSON payload. Exit 0 always (errors go to log). |
+| `recall` | Recall memories matching a query. Prints `{ hits: [...] }` JSON to stdout. |
+| `remember` | Store a new typed memory item. |
+| `health` | Probe configured provider(s). JSON output `{ ok, provider, url, latencyMs }`. |
+| `config` | Read/write config file via dot-path keys (`config get`, `config set`, `config unset`). |
+| `doctor` | Print env vars, last 5 log lines, selector resolution, config validation. |
+| `connect` | Pair this workstation to a provider (local daemon or SaaS dashboard code). |
 
-## Upgrading from 0.2.x to 0.3.0
+Full flag reference: `astramem --help` or `astramem <subcommand> --help`.
 
-`MEMORY_API_KEY` is gone; auth is Bearer-only.
+---
 
-1. Run `memory-login` once if you haven't already (cached at `~/.config/memory/auth.json` or `%APPDATA%\memory\auth.json`).
-2. Add this line to your shell rc so `.mcp.json` can resolve the bearer at Claude Code launch:
-   ```bash
-   export MEMORY_BEARER="$(memory-refresh)"
-   ```
-3. Remove `MEMORY_API_KEY` from your shell env and any `.env` overrides.
-4. Restart Claude Code. The MCP server should authenticate via Bearer.
+## Provider selector
 
-## Migrating from `cortex` plugin (pre-v0.2.0)
+The selector resolves which provider handles each call. Resolution order (highest precedence first):
 
-v0.2.0 renamed the plugin from `cortex` to `memory`. Breaking changes:
+1. `--provider local|saas|auto` flag on the CLI invocation.
+2. `ASTRAMEM_PROVIDER` environment variable.
+3. `provider` field in `~/.config/astramem/config.json` (or `%APPDATA%\Astramem\config.json`).
+4. `auto` default: probe local (`http://127.0.0.1:7777/health`) with a 5-second cached result;
+   fall back to SaaS if local is not reachable.
 
-- Slash commands: `/cortex:remember` → `/memory:remember`, `/cortex:recall` → `/memory:recall`
-- Env vars: `CORTEX_*` → `MEMORY_*` (rename every `CORTEX_API_URL`, `CORTEX_MCP_URL`, `CORTEX_API_KEY`, `CORTEX_CLERK_*`, `CORTEX_PRECOMPACT_*`, `CORTEX_SESSION_*` in your shell rc and any deployment env)
-- CLI scripts: `cortex-login` → `memory-login`, `cortex-refresh` → `memory-refresh`, `cortex-token` → `memory-token`
-- Auth cache path: `~/.config/cortex/auth.json` → `~/.config/memory/auth.json` (POSIX) and `%APPDATA%\cortex\auth.json` → `%APPDATA%\memory\auth.json` (Windows). Either move the file manually or re-run `memory-login`.
-- MCP server name in `.mcp.json`: `cortex` → `memory` (only matters if another plugin or external tool references the MCP server by name).
+The selector source is reported in `astramem doctor` output and in structured log lines emitted
+at each dispatch.
 
-Marketplace install command flips from `/plugin install cortex@astra` to `/plugin install memory@astra`.
+---
+
+## Unified config directory
+
+All plugin state (config, ingest log, secrets) lives in one location:
+
+| Platform | Path |
+| --- | --- |
+| POSIX (Linux / macOS) | `~/.config/astramem/` |
+| Windows | `%APPDATA%\Astramem\` |
+
+Key files:
+
+| File | Purpose |
+| --- | --- |
+| `config.json` | Provider preference, SaaS URL, local URL, logging options. |
+| `secrets.env` | Bearer token written by `astramem connect` (never committed). |
+| `ingest.log` | Append-only log of every ingest attempt (scrubbed). |
+| `ingest.log.1` | Previous rotation (overwritten on the next rotation event). |
+
+Legacy `~/.astramemory/` paths (written by pre-v0.4.0 `memory-connect`) are read as a migration
+fallback and left untouched.
+
+---
+
+## Bearer scrubbing
+
+Every value written to stdout, stderr, `ingest.log`, or any structured log line is passed through
+two scrub passes before write:
+
+1. **Regex scrub** — `/Bearer\s+[A-Fa-f0-9]{32,128}/g` replaces matching substrings with
+   `Bearer [REDACTED]`.
+2. **Key scrub** — recursively walks any JSON object and replaces the value of any key matching
+   `/api[_-]?key|token|bearer|secret|password/i` with `"[REDACTED]"`.
+
+The scrub is applied in `src/lib/scrub.ts` and called at every provider error path and log sink.
+
+---
+
+## Fail-silent ingest log
+
+`astramem ingest` (and the PreCompact / SessionEnd / SubagentStop hooks) write structured
+one-line JSON entries to `ingest.log` on every attempt — success or failure. Errors from a
+down provider are recorded here rather than surfaced to the calling process. The log is
+append-only and human-readable; inspect it with `astramem doctor` or `tail` it directly.
+
+---
+
+## Log rotation
+
+On each write to `ingest.log`, the logger checks the current file size. If the file exceeds
+**10 MB**, it renames `ingest.log` → `ingest.log.1` (overwriting any prior `.1`) and starts
+a fresh `ingest.log`. Only one backup is kept. All content in the backup has already been
+scrubbed prior to write.
+
+---
+
+## Environment variables
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `ASTRAMEM_PROVIDER` | (none) | Override provider selection (`local`, `saas`, `auto`). |
+| `MEMORY_BEARER` | (resolved via `astramem connect`) | Bearer token for MCP transport (`.mcp.json`). |
+| `MEMORY_API_URL` | `http://localhost:5201` | Legacy API base URL for hook scripts. |
+| `MEMORY_MCP_URL` | `http://localhost:5202` | MCP server URL read by `.mcp.json`. |
+| `MEMORY_INGEST_RETRIES` | `2` | POST attempt budget per hook fire. |
+| `MEMORY_INGEST_RETRY_SLEEP` | `1` | Seconds between hook retry attempts. |
+| `MEMORY_PRECOMPACT_MAX_TURNS` | `20` | Turns captured by PreCompact hook. |
+| `MEMORY_SESSION_MAX_TURNS` | `40` | Turns captured by SessionEnd hook. |
+| `MEMORY_SUBAGENT_MAX_TURNS` | `12` | Turns captured by SubagentStop hook. |
+| `ASTRAMEMORY_ENV` | `prod` | Active profile name for `~/.astramemory/` legacy lookup. |
+| `ASTRAMEMORY_HOOK_DEBUG` | `0` | Set `1` to emit one debug line per hook fire to stderr. |
+
+---
+
+## Hooks
+
+| Hook | Trigger | Max turns | Override |
+| --- | --- | --- | --- |
+| PreCompact | Before context compaction | 20 | `MEMORY_PRECOMPACT_MAX_TURNS` |
+| SessionEnd | Claude Code session exit | 40 | `MEMORY_SESSION_MAX_TURNS` |
+| SubagentStop | Sub-agent task end | 12 | `MEMORY_SUBAGENT_MAX_TURNS` |
+
+All hooks exit 0 and never block the triggering event. Failures (provider down, no Bearer,
+`jq` missing) are written to `ingest.log` and silently swallowed.
+
+---
+
+## MCP server
+
+`.mcp.json` registers an HTTP MCP server at `${MEMORY_MCP_URL}/mcp`. The slash commands do
+**not** go through MCP — they invoke `bin/astramem` directly. The MCP server remains available
+for other agents or tools that prefer the MCP protocol.
+
+Export `MEMORY_BEARER` and `MEMORY_MCP_URL` before launching Claude Code if you want the MCP
+transport live alongside the CLI path.
+
+---
+
+## Daily ops cheatsheet
+
+```bash
+# Ingest a JSON payload
+astramem ingest --json '{"id":"s1","type":"transcript","text":"..."}'
+
+# Recall recent decisions
+astramem recall --query "provider selector decision" --k 10
+
+# Store a note
+astramem remember --content "We chose Bun over Node for the plugin runtime" --type decision
+
+# Check provider health
+astramem health
+
+# Diagnose config + env
+astramem doctor
+
+# Get / set config values
+astramem config get
+astramem config get provider
+astramem config set provider local
+
+# Pair workstation (local daemon)
+astramem connect
+
+# Pair workstation (dashboard claim code)
+astramem connect ABCD-1234 --env prod
+```
+
+---
+
+## Companion projects
+
+- [astramem-local](https://github.com/astragenie/astramemory-local) — local daemon that the
+  `local` provider talks to. Run it on `localhost:7777` for offline / private memory.
+- [runner-plugin](https://github.com/astragenie/runner-plugin) — Engineering OS runner plugin;
+  shares the `astramem ingest` path for session digests.
+- [crew / GEPA loop](https://github.com/astragenie/crew) — dev-team crew plugin whose
+  PreCompact hooks feed into AstraMemory via this plugin.
+
+---
+
+## Back-compat bins
+
+The following legacy bin names still work (shims that delegate to their `astramem`-prefixed
+equivalents):
+
+- `memory-login` → `astramem-login`
+- `memory-refresh` → `astramem-refresh`
+- `memory-token` → `astramem-token`
+- `memory-connect` → `astramem-connect`
+
+---
+
+## Upgrading from memory-plugin (pre-v0.4.0)
+
+See `CHANGELOG.md` v0.4.0 entry for the full list of breaking changes. Quick checklist:
+
+1. Rename slash commands: `/memory:recall` → `/recall`, `/memory:remember` → `/remember`
+   (or install as `@astragenie/astramem-plugin` — commands are unnamespaced by default).
+2. Run `astramem connect` once to write the unified config dir.
+3. Remove `ASTRAMEMORY_API_URL` and `ASTRAMEMORY_API_KEY` raw env vars from your shell rc
+   (deprecated; removed at v1.7).
+4. Restart Claude Code.
