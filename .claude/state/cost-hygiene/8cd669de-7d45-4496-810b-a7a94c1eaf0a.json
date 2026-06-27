@@ -1,0 +1,1177 @@
+{
+  "session_id": "8cd669de-7d45-4496-810b-a7a94c1eaf0a",
+  "first_seen": "2026-06-19T09:05:35.780Z",
+  "last_seen": "2026-06-19T20:12:28.332Z",
+  "total_bytes": 0,
+  "entries": {
+    "C:\\work\\mega\\astramemory-plugin\\README.md": {
+      "read_count": 6,
+      "first_read_at": "2026-06-19T09:05:35.780Z",
+      "last_read_at": "2026-06-19T11:18:02.795Z",
+      "mtime_at_last_read": "2026-06-19T11:15:07.002Z",
+      "size_at_last_read": 9528,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:15:07.136Z",
+      "mtime_at_last_edit": "2026-06-19T11:15:07.002Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\hooks\\hooks.json": {
+      "read_count": 5,
+      "first_read_at": "2026-06-19T09:05:43.518Z",
+      "last_read_at": "2026-06-19T11:17:20.638Z",
+      "mtime_at_last_read": "2026-06-19T10:58:24.139Z",
+      "size_at_last_read": 957,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:58:24.300Z",
+      "mtime_at_last_edit": "2026-06-19T10:58:24.139Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\hooks\\scripts\\pre-compact-capture.sh": {
+      "read_count": 9,
+      "first_read_at": "2026-06-19T09:05:49.890Z",
+      "last_read_at": "2026-06-19T11:17:33.907Z",
+      "mtime_at_last_read": "2026-06-19T10:53:30.989Z",
+      "size_at_last_read": 509,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:53:31.122Z",
+      "mtime_at_last_edit": "2026-06-19T10:53:30.989Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\hooks\\scripts\\session-end-summary.sh": {
+      "read_count": 8,
+      "first_read_at": "2026-06-19T09:05:57.462Z",
+      "last_read_at": "2026-06-19T11:17:34.257Z",
+      "mtime_at_last_read": "2026-06-19T10:53:33.876Z",
+      "size_at_last_read": 455,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:53:34.053Z",
+      "mtime_at_last_edit": "2026-06-19T10:53:33.876Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\hooks\\scripts\\_load-env.sh": {
+      "read_count": 6,
+      "first_read_at": "2026-06-19T09:06:05.778Z",
+      "last_read_at": "2026-06-19T11:17:48.101Z",
+      "mtime_at_last_read": "2026-06-17T06:12:47.416Z",
+      "size_at_last_read": 1689,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\commands\\recall.md": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T09:06:13.458Z",
+      "last_read_at": "2026-06-19T11:18:33.284Z",
+      "mtime_at_last_read": "2026-06-17T06:12:06.740Z",
+      "size_at_last_read": 1059,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\commands\\remember.md": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T09:06:20.232Z",
+      "last_read_at": "2026-06-19T11:18:33.376Z",
+      "mtime_at_last_read": "2026-06-17T06:12:07.782Z",
+      "size_at_last_read": 1452,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\package.json": {
+      "read_count": 4,
+      "first_read_at": "2026-06-19T09:06:27.596Z",
+      "last_read_at": "2026-06-19T11:18:17.022Z",
+      "mtime_at_last_read": "2026-06-19T11:07:54.306Z",
+      "size_at_last_read": 426,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:07:54.588Z",
+      "mtime_at_last_edit": "2026-06-19T11:07:54.306Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\.claude-plugin\\plugin.json": {
+      "read_count": 4,
+      "first_read_at": "2026-06-19T09:06:39.521Z",
+      "last_read_at": "2026-06-19T11:18:16.479Z",
+      "mtime_at_last_read": "2026-06-19T11:07:52.541Z",
+      "size_at_last_read": 524,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:07:52.790Z",
+      "mtime_at_last_edit": "2026-06-19T11:07:52.541Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\.env.azuredev": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T09:06:46.052Z",
+      "last_read_at": "2026-06-19T11:18:04.063Z",
+      "mtime_at_last_read": "2026-06-19T11:03:23.370Z",
+      "size_at_last_read": 642,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:03:23.537Z",
+      "mtime_at_last_edit": "2026-06-19T11:03:23.370Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\.env.local": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T09:06:53.261Z",
+      "last_read_at": "2026-06-19T11:18:03.852Z",
+      "mtime_at_last_read": "2026-06-19T11:03:19.476Z",
+      "size_at_last_read": 882,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:03:19.727Z",
+      "mtime_at_last_edit": "2026-06-19T11:03:19.476Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\.mcp.json": {
+      "read_count": 5,
+      "first_read_at": "2026-06-19T09:06:59.965Z",
+      "last_read_at": "2026-06-19T11:17:21.156Z",
+      "mtime_at_last_read": "2026-06-19T11:03:13.924Z",
+      "size_at_last_read": 186,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:03:14.161Z",
+      "mtime_at_last_edit": "2026-06-19T11:03:13.924Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\bin\\memory-refresh": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T09:07:06.637Z",
+      "last_read_at": "2026-06-19T11:17:48.510Z",
+      "mtime_at_last_read": "2026-06-17T06:12:18.761Z",
+      "size_at_last_read": 1738,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Api\\Controllers\\ConversationImportController.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T09:35:48.173Z",
+      "last_read_at": "2026-06-19T09:35:48.173Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.057Z",
+      "size_at_last_read": 2073,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Api\\Controllers\\ExtractionsController.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T09:35:55.424Z",
+      "last_read_at": "2026-06-19T09:35:55.424Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.057Z",
+      "size_at_last_read": 2278,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Domain\\Interfaces\\IEngineeringExtractionService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T09:36:13.332Z",
+      "last_read_at": "2026-06-19T09:36:13.332Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.138Z",
+      "size_at_last_read": 727,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Infrastructure\\Services\\EngineeringExtractionService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T09:36:32.439Z",
+      "last_read_at": "2026-06-19T09:36:32.439Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.318Z",
+      "size_at_last_read": 4974,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\docs\\superpowers\\specs\\2026-06-19-astramemory-transcript-ingest-design.md": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T09:48:38.187Z",
+      "last_read_at": "2026-06-19T10:56:01.527Z",
+      "mtime_at_last_read": "2026-06-19T09:49:22.842Z",
+      "size_at_last_read": 18105,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T09:49:23.049Z",
+      "mtime_at_last_edit": "2026-06-19T09:49:22.842Z"
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Domain\\Interfaces\\IMemoryGraphService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T09:57:22.632Z",
+      "last_read_at": "2026-06-19T09:57:22.632Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.145Z",
+      "size_at_last_read": 1302,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Api\\Controllers\\IngestionController.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T09:57:37.087Z",
+      "last_read_at": "2026-06-19T09:57:37.087Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.057Z",
+      "size_at_last_read": 18874,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Infrastructure\\Services\\IMemoryWriteService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T09:58:00.876Z",
+      "last_read_at": "2026-06-19T09:58:00.876Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.322Z",
+      "size_at_last_read": 508,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\docs\\superpowers\\plans\\2026-06-19-astramemory-transcript-ingest.md": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T10:05:21.041Z",
+      "last_read_at": "2026-06-19T10:16:16.696Z",
+      "mtime_at_last_read": "2026-06-19T10:05:57.934Z",
+      "size_at_last_read": 92569,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:05:58.077Z",
+      "mtime_at_last_edit": "2026-06-19T10:05:57.934Z"
+    },
+    "C:\\Users\\serge\\.claude\\plugins\\cache\\claude-plugins-official\\superpowers\\5.1.0\\skills\\subagent-driven-development\\implementer-prompt.md": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T10:13:05.035Z",
+      "last_read_at": "2026-06-19T10:13:05.035Z",
+      "mtime_at_last_read": "2026-05-22T01:11:56.159Z",
+      "size_at_last_read": 4258,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\tests\\ingest-scrub.test.mjs": {
+      "read_count": 6,
+      "first_read_at": "2026-06-19T10:14:47.156Z",
+      "last_read_at": "2026-06-19T11:21:12.309Z",
+      "mtime_at_last_read": "2026-06-19T10:22:07.750Z",
+      "size_at_last_read": 2016,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:22:08.006Z",
+      "mtime_at_last_edit": "2026-06-19T10:22:07.750Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\hooks\\scripts\\_ingest-transcript.sh": {
+      "read_count": 18,
+      "first_read_at": "2026-06-19T10:15:22.816Z",
+      "last_read_at": "2026-06-19T11:52:15.319Z",
+      "mtime_at_last_read": "2026-06-19T11:28:01.589Z",
+      "size_at_last_read": 5962,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:27:12.539Z",
+      "mtime_at_last_edit": "2026-06-19T11:27:12.277Z"
+    },
+    "C:\\Users\\serge\\.claude\\plugins\\cache\\claude-plugins-official\\superpowers\\5.1.0\\skills\\subagent-driven-development\\spec-reviewer-prompt.md": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T10:18:25.482Z",
+      "last_read_at": "2026-06-19T10:18:25.482Z",
+      "mtime_at_last_read": "2026-05-22T01:11:56.159Z",
+      "size_at_last_read": 1999,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\Users\\serge\\.claude\\plugins\\cache\\claude-plugins-official\\superpowers\\5.1.0\\skills\\subagent-driven-development\\code-quality-reviewer-prompt.md": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T10:23:35.361Z",
+      "last_read_at": "2026-06-19T10:23:35.361Z",
+      "mtime_at_last_read": "2026-05-22T01:11:56.159Z",
+      "size_at_last_read": 1080,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\tests\\ingest-retry.test.mjs": {
+      "read_count": 8,
+      "first_read_at": "2026-06-19T10:28:56.332Z",
+      "last_read_at": "2026-06-19T11:18:45.810Z",
+      "mtime_at_last_read": "2026-06-19T10:51:58.559Z",
+      "size_at_last_read": 7393,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:51:58.683Z",
+      "mtime_at_last_edit": "2026-06-19T10:51:58.559Z"
+    },
+    "C:\\Users\\serge\\AppData\\Local\\Temp\\claude\\C--work-mega-astramemory-plugin\\8cd669de-7d45-4496-810b-a7a94c1eaf0a\\tasks\\bnurd1b73.output": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T10:30:06.839Z",
+      "last_read_at": "2026-06-19T10:30:06.839Z",
+      "mtime_at_last_read": "2026-06-19T10:29:02.071Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\Users\\serge\\AppData\\Local\\Temp\\claude\\C--work-mega-astramemory-plugin\\8cd669de-7d45-4496-810b-a7a94c1eaf0a\\tasks\\bhwygsx4l.output": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T10:32:47.058Z",
+      "last_read_at": "2026-06-19T10:32:47.058Z",
+      "mtime_at_last_read": "2026-06-19T10:32:27.395Z",
+      "size_at_last_read": 12,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\tests\\ingest-payload.test.mjs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T10:45:20.733Z",
+      "last_read_at": "2026-06-19T11:18:45.022Z",
+      "mtime_at_last_read": "2026-06-19T10:45:20.581Z",
+      "size_at_last_read": 6849,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:45:20.733Z",
+      "mtime_at_last_edit": "2026-06-19T10:45:20.581Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\hooks\\scripts\\subagent-stop-capture.sh": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T10:58:17.423Z",
+      "last_read_at": "2026-06-19T11:17:34.744Z",
+      "mtime_at_last_read": "2026-06-19T10:58:17.296Z",
+      "size_at_last_read": 515,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T10:58:17.423Z",
+      "mtime_at_last_edit": "2026-06-19T10:58:17.296Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\CHANGELOG.md": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T11:09:06.224Z",
+      "last_read_at": "2026-06-19T11:18:03.568Z",
+      "mtime_at_last_read": "2026-06-19T11:09:05.667Z",
+      "size_at_last_read": 1050,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:09:06.224Z",
+      "mtime_at_last_edit": "2026-06-19T11:09:05.667Z"
+    },
+    "C:\\work\\mega\\astramemory-plugin\\bin\\memory-token": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T11:17:48.967Z",
+      "last_read_at": "2026-06-19T11:17:48.967Z",
+      "mtime_at_last_read": "2026-06-17T06:12:19.488Z",
+      "size_at_last_read": 594,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\bin\\memory-login": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T11:17:49.140Z",
+      "last_read_at": "2026-06-19T11:17:49.140Z",
+      "mtime_at_last_read": "2026-06-17T06:12:12.338Z",
+      "size_at_last_read": 3603,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\astramemory-plugin\\.gitignore": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T11:18:45.900Z",
+      "last_read_at": "2026-06-19T11:18:45.900Z",
+      "mtime_at_last_read": "2026-06-17T06:11:53.664Z",
+      "size_at_last_read": 410,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\Users\\serge\\AppData\\Local\\Temp\\mqt\\echo-server.js": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T11:20:35.733Z",
+      "last_read_at": "2026-06-19T11:20:35.733Z",
+      "mtime_at_last_read": "2026-06-19T11:20:35.559Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:20:35.733Z",
+      "mtime_at_last_edit": "2026-06-19T11:20:35.559Z"
+    },
+    "C:\\work\\mega\\memory\\tests\\AstraMemory.Tests\\AstraMemory.Tests.csproj": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T11:44:04.867Z",
+      "last_read_at": "2026-06-19T11:44:04.867Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.395Z",
+      "size_at_last_read": 1836,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Application\\AstraMemory.Application.csproj": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T11:44:05.592Z",
+      "last_read_at": "2026-06-19T11:44:05.592Z",
+      "mtime_at_last_read": "2026-06-14T18:38:40.097Z",
+      "size_at_last_read": 1160,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\tests\\AstraMemory.Tests\\TranscriptIngest\\TranscriptScrubberTests.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T11:44:43.835Z",
+      "last_read_at": "2026-06-19T11:44:43.835Z",
+      "mtime_at_last_read": "2026-06-19T11:44:43.488Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:44:43.835Z",
+      "mtime_at_last_edit": "2026-06-19T11:44:43.488Z"
+    },
+    "C:\\work\\mega\\memory\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\TranscriptScrubber.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T11:46:26.711Z",
+      "last_read_at": "2026-06-19T11:46:26.711Z",
+      "mtime_at_last_read": "2026-06-19T11:46:26.478Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T11:46:26.711Z",
+      "mtime_at_last_edit": "2026-06-19T11:46:26.478Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Api\\Models\\MemoryModels.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:00:20.033Z",
+      "last_read_at": "2026-06-19T18:02:15.400Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.683Z",
+      "size_at_last_read": 20294,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Api\\Models\\IngestTranscriptRequest.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:00:35.723Z",
+      "last_read_at": "2026-06-19T18:18:20.261Z",
+      "mtime_at_last_read": "2026-06-19T18:00:35.589Z",
+      "size_at_last_read": 1309,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:00:35.723Z",
+      "mtime_at_last_edit": "2026-06-19T18:00:35.589Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Api\\Models\\IngestTranscriptResponse.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:00:42.808Z",
+      "last_read_at": "2026-06-19T18:18:33.709Z",
+      "mtime_at_last_read": "2026-06-19T18:00:42.629Z",
+      "size_at_last_read": 687,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:00:42.808Z",
+      "mtime_at_last_edit": "2026-06-19T18:00:42.629Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\tests\\AstraMemory.Tests\\TranscriptIngest\\IdempotencyCacheTests.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:03:52.871Z",
+      "last_read_at": "2026-06-19T18:11:24.786Z",
+      "mtime_at_last_read": "2026-06-19T18:03:52.729Z",
+      "size_at_last_read": 1191,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:03:52.871Z",
+      "mtime_at_last_edit": "2026-06-19T18:03:52.729Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\IdempotencyCache.cs": {
+      "read_count": 6,
+      "first_read_at": "2026-06-19T18:04:30.315Z",
+      "last_read_at": "2026-06-19T18:30:47.625Z",
+      "mtime_at_last_read": "2026-06-19T18:07:54.705Z",
+      "size_at_last_read": 1394,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:07:54.864Z",
+      "mtime_at_last_edit": "2026-06-19T18:07:54.705Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Domain\\ValueObjects\\TenantContext.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T18:08:50.326Z",
+      "last_read_at": "2026-06-19T18:18:08.171Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.759Z",
+      "size_at_last_read": 275,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Services\\MemoryWriteService.cs": {
+      "read_count": 5,
+      "first_read_at": "2026-06-19T18:10:15.486Z",
+      "last_read_at": "2026-06-19T19:06:37.198Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.894Z",
+      "size_at_last_read": 17121,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Services\\IMemoryWriteService.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T18:10:34.769Z",
+      "last_read_at": "2026-06-19T19:01:23.698Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.888Z",
+      "size_at_last_read": 508,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\TranscriptScrubber.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T18:10:36.316Z",
+      "last_read_at": "2026-06-19T18:40:44.220Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.711Z",
+      "size_at_last_read": 1333,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\tests\\AstraMemory.Tests\\AstraMemory.Tests.csproj": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T18:10:54.140Z",
+      "last_read_at": "2026-06-19T18:10:54.140Z",
+      "mtime_at_last_read": "2026-06-19T17:58:21.079Z",
+      "size_at_last_read": 1836,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Application\\AstraMemory.Application.csproj": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T18:11:11.786Z",
+      "last_read_at": "2026-06-19T18:11:11.786Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.702Z",
+      "size_at_last_read": 1160,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\ITranscriptIngestService.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T18:12:24.554Z",
+      "last_read_at": "2026-06-19T18:30:34.583Z",
+      "mtime_at_last_read": "2026-06-19T18:12:24.331Z",
+      "size_at_last_read": 953,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:12:24.554Z",
+      "mtime_at_last_edit": "2026-06-19T18:12:24.331Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\tests\\AstraMemory.Tests\\TranscriptIngest\\TranscriptIngestServiceTests.cs": {
+      "read_count": 6,
+      "first_read_at": "2026-06-19T18:12:41.389Z",
+      "last_read_at": "2026-06-19T19:05:44.020Z",
+      "mtime_at_last_read": "2026-06-19T19:02:36.136Z",
+      "size_at_last_read": 11866,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:02:36.327Z",
+      "mtime_at_last_edit": "2026-06-19T19:02:36.136Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\TranscriptIngestService.cs": {
+      "read_count": 5,
+      "first_read_at": "2026-06-19T18:13:09.689Z",
+      "last_read_at": "2026-06-19T19:05:35.592Z",
+      "mtime_at_last_read": "2026-06-19T19:03:42.907Z",
+      "size_at_last_read": 4917,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:03:43.354Z",
+      "mtime_at_last_edit": "2026-06-19T19:03:42.907Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\tests\\AstraMemory.Tests\\Controllers\\WebhookControllerTests.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:17:42.464Z",
+      "last_read_at": "2026-06-19T18:22:13.823Z",
+      "mtime_at_last_read": "2026-06-19T17:58:21.089Z",
+      "size_at_last_read": 8460,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Api\\Middleware\\AuthMiddleware.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T18:17:53.957Z",
+      "last_read_at": "2026-06-19T18:17:53.957Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.678Z",
+      "size_at_last_read": 12961,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Application\\DependencyInjection.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T18:18:55.728Z",
+      "last_read_at": "2026-06-19T19:14:36.789Z",
+      "mtime_at_last_read": "2026-06-19T18:20:16.374Z",
+      "size_at_last_read": 1507,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:20:16.592Z",
+      "mtime_at_last_edit": "2026-06-19T18:20:16.374Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\tests\\AstraMemory.Tests\\Controllers\\TranscriptIngestControllerTests.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:19:29.972Z",
+      "last_read_at": "2026-06-19T18:25:01.400Z",
+      "mtime_at_last_read": "2026-06-19T18:19:29.684Z",
+      "size_at_last_read": 4815,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:25:16.819Z",
+      "mtime_at_last_edit": "2026-06-19T18:25:16.605Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Api\\Controllers\\TranscriptIngestController.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:19:59.270Z",
+      "last_read_at": "2026-06-19T18:24:23.570Z",
+      "mtime_at_last_read": "2026-06-19T18:19:58.969Z",
+      "size_at_last_read": 2519,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:24:45.644Z",
+      "mtime_at_last_edit": "2026-06-19T18:24:45.508Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Api\\Controllers\\IngestionController.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T18:22:12.778Z",
+      "last_read_at": "2026-06-19T18:22:12.778Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.670Z",
+      "size_at_last_read": 18874,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Services\\EngineeringExtractionService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T18:33:32.154Z",
+      "last_read_at": "2026-06-19T18:33:32.154Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.883Z",
+      "size_at_last_read": 4974,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Domain\\Interfaces\\ITranscriptExtractor.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T18:33:50.152Z",
+      "last_read_at": "2026-06-19T19:05:57.095Z",
+      "mtime_at_last_read": "2026-06-19T18:33:50.009Z",
+      "size_at_last_read": 422,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:33:50.152Z",
+      "mtime_at_last_edit": "2026-06-19T18:33:50.009Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\tests\\AstraMemory.Tests\\TranscriptIngest\\TranscriptExtractorTests.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:34:04.130Z",
+      "last_read_at": "2026-06-19T18:42:39.106Z",
+      "mtime_at_last_read": "2026-06-19T18:34:03.972Z",
+      "size_at_last_read": 3496,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:48:27.864Z",
+      "mtime_at_last_edit": "2026-06-19T18:48:27.620Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Services\\TranscriptExtractor.cs": {
+      "read_count": 4,
+      "first_read_at": "2026-06-19T18:34:38.452Z",
+      "last_read_at": "2026-06-19T19:14:35.104Z",
+      "mtime_at_last_read": "2026-06-19T18:48:10.963Z",
+      "size_at_last_read": 4237,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:48:11.186Z",
+      "mtime_at_last_edit": "2026-06-19T18:48:10.963Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Domain\\Interfaces\\IMemoryGraphService.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:50:30.598Z",
+      "last_read_at": "2026-06-19T19:10:43.351Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.739Z",
+      "size_at_last_read": 1302,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Domain\\Interfaces\\IMemoryGraphLinker.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T18:51:01.388Z",
+      "last_read_at": "2026-06-19T19:06:06.035Z",
+      "mtime_at_last_read": "2026-06-19T18:51:01.235Z",
+      "size_at_last_read": 293,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:51:01.388Z",
+      "mtime_at_last_edit": "2026-06-19T18:51:01.235Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Domain\\Interfaces\\IMemoryReferenceLookup.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:51:03.472Z",
+      "last_read_at": "2026-06-19T19:10:20.522Z",
+      "mtime_at_last_read": "2026-06-19T18:51:03.302Z",
+      "size_at_last_read": 306,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:51:03.472Z",
+      "mtime_at_last_edit": "2026-06-19T18:51:03.302Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\tests\\AstraMemory.Tests\\TranscriptIngest\\MemoryGraphLinkerTests.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T18:51:16.511Z",
+      "last_read_at": "2026-06-19T18:57:46.968Z",
+      "mtime_at_last_read": "2026-06-19T18:54:34.868Z",
+      "size_at_last_read": 6391,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:54:35.077Z",
+      "mtime_at_last_edit": "2026-06-19T18:54:34.868Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Services\\MemoryGraphLinker.cs": {
+      "read_count": 4,
+      "first_read_at": "2026-06-19T18:51:44.942Z",
+      "last_read_at": "2026-06-19T19:14:34.172Z",
+      "mtime_at_last_read": "2026-06-19T18:55:55.394Z",
+      "size_at_last_read": 3627,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T18:55:55.752Z",
+      "mtime_at_last_edit": "2026-06-19T18:55:55.394Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Data\\MemoryContext.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:10:07.381Z",
+      "last_read_at": "2026-06-19T19:10:07.381Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.804Z",
+      "size_at_last_read": 7397,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\ServiceCollectionExtensions.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T19:10:52.661Z",
+      "last_read_at": "2026-06-19T19:13:58.162Z",
+      "mtime_at_last_read": "2026-06-19T19:11:29.718Z",
+      "size_at_last_read": 44697,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:11:29.975Z",
+      "mtime_at_last_edit": "2026-06-19T19:11:29.718Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Services\\MemoryReferenceLookup.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:11:11.360Z",
+      "last_read_at": "2026-06-19T19:13:57.314Z",
+      "mtime_at_last_read": "2026-06-19T19:11:11.166Z",
+      "size_at_last_read": 836,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:11:11.360Z",
+      "mtime_at_last_edit": "2026-06-19T19:11:11.166Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Infrastructure\\Services\\EmbeddingSimilarityProvider.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:11:21.173Z",
+      "last_read_at": "2026-06-19T19:13:57.538Z",
+      "mtime_at_last_read": "2026-06-19T19:11:21.043Z",
+      "size_at_last_read": 1348,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:11:21.173Z",
+      "mtime_at_last_edit": "2026-06-19T19:11:21.043Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-transcript-ingest\\src\\AstraMemory.Api\\Program.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:14:36.165Z",
+      "last_read_at": "2026-06-19T19:14:36.165Z",
+      "mtime_at_last_read": "2026-06-19T17:58:20.689Z",
+      "size_at_last_read": 31865,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\.claude\\artifacts\\loop\\backlog\\pending\\FEAT-252.md": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:42:57.347Z",
+      "last_read_at": "2026-06-19T19:42:57.347Z",
+      "mtime_at_last_read": "2026-06-19T19:42:27.713Z",
+      "size_at_last_read": 1915,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\.claude\\artifacts\\loop\\backlog\\pending\\FEAT-256.md": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T19:43:24.819Z",
+      "last_read_at": "2026-06-19T19:43:24.819Z",
+      "mtime_at_last_read": "2026-06-19T19:43:24.690Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:43:24.819Z",
+      "mtime_at_last_edit": "2026-06-19T19:43:24.690Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\.claude\\artifacts\\loop\\backlog\\pending\\FEAT-257.md": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T19:43:55.224Z",
+      "last_read_at": "2026-06-19T19:43:55.224Z",
+      "mtime_at_last_read": "2026-06-19T19:43:53.618Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:43:55.224Z",
+      "mtime_at_last_edit": "2026-06-19T19:43:53.618Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\.claude\\artifacts\\loop\\backlog\\pending\\FEAT-258.md": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T19:44:27.019Z",
+      "last_read_at": "2026-06-19T19:44:27.019Z",
+      "mtime_at_last_read": "2026-06-19T19:44:25.327Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:44:27.019Z",
+      "mtime_at_last_edit": "2026-06-19T19:44:25.327Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\.claude\\artifacts\\loop\\backlog\\pending\\FEAT-259.md": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T19:44:52.135Z",
+      "last_read_at": "2026-06-19T19:44:52.135Z",
+      "mtime_at_last_read": "2026-06-19T19:44:51.175Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:44:52.135Z",
+      "mtime_at_last_edit": "2026-06-19T19:44:51.175Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\TranscriptIngestService.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T19:47:20.835Z",
+      "last_read_at": "2026-06-19T20:05:06.434Z",
+      "mtime_at_last_read": "2026-06-19T19:54:31.589Z",
+      "size_at_last_read": 6600,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:09:00.928Z",
+      "mtime_at_last_edit": "2026-06-19T20:09:00.794Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\ITranscriptIngestService.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T19:47:30.492Z",
+      "last_read_at": "2026-06-19T20:05:17.144Z",
+      "mtime_at_last_read": "2026-06-19T19:48:42.326Z",
+      "size_at_last_read": 978,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:08:25.366Z",
+      "mtime_at_last_edit": "2026-06-19T20:08:25.233Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Api\\Models\\IngestTranscriptResponse.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:47:39.135Z",
+      "last_read_at": "2026-06-19T19:47:39.135Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.077Z",
+      "size_at_last_read": 687,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:49:18.224Z",
+      "mtime_at_last_edit": "2026-06-19T19:49:18.113Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Api\\Controllers\\TranscriptIngestController.cs": {
+      "read_count": 3,
+      "first_read_at": "2026-06-19T19:47:46.568Z",
+      "last_read_at": "2026-06-19T20:06:07.466Z",
+      "mtime_at_last_read": "2026-06-19T19:54:37.821Z",
+      "size_at_last_read": 3737,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:54:37.999Z",
+      "mtime_at_last_edit": "2026-06-19T19:54:37.821Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\tests\\AstraMemory.Tests\\TranscriptIngest\\TranscriptIngestServiceTests.cs": {
+      "read_count": 7,
+      "first_read_at": "2026-06-19T19:47:53.830Z",
+      "last_read_at": "2026-06-19T20:11:41.473Z",
+      "mtime_at_last_read": "2026-06-19T20:11:37.304Z",
+      "size_at_last_read": 18994,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:11:54.141Z",
+      "mtime_at_last_edit": "2026-06-19T20:11:54.015Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Infrastructure\\Services\\MemoryWriteService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:48:08.573Z",
+      "last_read_at": "2026-06-19T19:48:08.573Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.303Z",
+      "size_at_last_read": 27003,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\tests\\AstraMemory.Tests\\Controllers\\TranscriptIngestControllerTests.cs": {
+      "read_count": 4,
+      "first_read_at": "2026-06-19T19:48:22.343Z",
+      "last_read_at": "2026-06-19T20:06:26.629Z",
+      "mtime_at_last_read": "2026-06-19T19:55:20.572Z",
+      "size_at_last_read": 7029,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:55:20.692Z",
+      "mtime_at_last_edit": "2026-06-19T19:55:20.572Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\AstraMemory.Application.csproj": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:49:33.706Z",
+      "last_read_at": "2026-06-19T19:49:33.706Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.096Z",
+      "size_at_last_read": 1160,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\IdempotencyCache.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:53:09.020Z",
+      "last_read_at": "2026-06-19T19:53:09.020Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.104Z",
+      "size_at_last_read": 1394,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:54:12.071Z",
+      "mtime_at_last_edit": "2026-06-19T19:54:11.888Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\tests\\AstraMemory.Tests\\TranscriptIngest\\IdempotencyCacheTests.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:53:33.124Z",
+      "last_read_at": "2026-06-19T19:53:33.124Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.551Z",
+      "size_at_last_read": 1191,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:54:48.334Z",
+      "mtime_at_last_edit": "2026-06-19T19:54:48.215Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\IdempotencyConflictException.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T19:54:02.007Z",
+      "last_read_at": "2026-06-19T19:54:02.007Z",
+      "mtime_at_last_read": "2026-06-19T19:54:01.893Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T19:54:02.007Z",
+      "mtime_at_last_edit": "2026-06-19T19:54:01.893Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Domain\\Interfaces\\IVectorStore.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T19:57:13.500Z",
+      "last_read_at": "2026-06-19T19:59:58.674Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.152Z",
+      "size_at_last_read": 3742,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Infrastructure\\Repositories\\MemoryRepository.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:58:07.783Z",
+      "last_read_at": "2026-06-19T19:58:07.783Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.282Z",
+      "size_at_last_read": 47768,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Domain\\Interfaces\\IEmbeddingProvider.cs": {
+      "read_count": 2,
+      "first_read_at": "2026-06-19T19:58:24.850Z",
+      "last_read_at": "2026-06-19T20:00:13.033Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.131Z",
+      "size_at_last_read": 313,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Infrastructure\\Services\\EmbeddingSimilarityProvider.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:59:31.737Z",
+      "last_read_at": "2026-06-19T19:59:31.737Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.292Z",
+      "size_at_last_read": 1348,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:01:05.023Z",
+      "mtime_at_last_edit": "2026-06-19T20:01:04.907Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Infrastructure\\Graph\\MemoryGraphService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T19:59:42.460Z",
+      "last_read_at": "2026-06-19T19:59:42.460Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.226Z",
+      "size_at_last_read": 6333,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\tests\\AstraMemory.Tests\\TranscriptIngest\\MemoryGraphLinkerTests.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:00:33.891Z",
+      "last_read_at": "2026-06-19T20:00:33.891Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.552Z",
+      "size_at_last_read": 6391,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Infrastructure\\ServiceCollectionExtensions.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:00:42.387Z",
+      "last_read_at": "2026-06-19T20:00:42.387Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.288Z",
+      "size_at_last_read": 45016,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\tests\\AstraMemory.Tests\\TranscriptIngest\\EmbeddingSimilarityProviderTests.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:01:28.297Z",
+      "last_read_at": "2026-06-19T20:01:28.297Z",
+      "mtime_at_last_read": "2026-06-19T20:01:28.174Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:01:28.297Z",
+      "mtime_at_last_edit": "2026-06-19T20:01:28.174Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Domain\\Interfaces\\IIngestionJobService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:02:56.039Z",
+      "last_read_at": "2026-06-19T20:02:56.039Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.134Z",
+      "size_at_last_read": 2824,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\DependencyInjection.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:05:24.809Z",
+      "last_read_at": "2026-06-19T20:05:24.809Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.098Z",
+      "size_at_last_read": 1507,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:09:38.195Z",
+      "mtime_at_last_edit": "2026-06-19T20:09:38.077Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Api\\Controllers\\ExtractionsController.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:06:36.149Z",
+      "last_read_at": "2026-06-19T20:06:36.149Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.065Z",
+      "size_at_last_read": 2278,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Api\\Middleware\\AuthMiddleware.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:06:52.895Z",
+      "last_read_at": "2026-06-19T20:06:52.895Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.071Z",
+      "size_at_last_read": 12961,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Api\\Program.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:07:12.698Z",
+      "last_read_at": "2026-06-19T20:07:12.698Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.084Z",
+      "size_at_last_read": 31865,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:09:42.647Z",
+      "mtime_at_last_edit": "2026-06-19T20:09:42.520Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\TranscriptIngestOptions.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:07:31.625Z",
+      "last_read_at": "2026-06-19T20:07:31.625Z",
+      "mtime_at_last_read": "2026-06-19T20:07:31.502Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:07:31.625Z",
+      "mtime_at_last_edit": "2026-06-19T20:07:31.502Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\ExtractionJobState.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:07:37.982Z",
+      "last_read_at": "2026-06-19T20:07:37.982Z",
+      "mtime_at_last_read": "2026-06-19T20:07:37.775Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:07:37.982Z",
+      "mtime_at_last_edit": "2026-06-19T20:07:37.775Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\IExtractionJobStore.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:07:45.177Z",
+      "last_read_at": "2026-06-19T20:07:45.177Z",
+      "mtime_at_last_read": "2026-06-19T20:07:45.062Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:07:45.177Z",
+      "mtime_at_last_edit": "2026-06-19T20:07:45.062Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\ExtractionJobStore.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:07:55.200Z",
+      "last_read_at": "2026-06-19T20:07:55.200Z",
+      "mtime_at_last_read": "2026-06-19T20:07:55.052Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:07:55.200Z",
+      "mtime_at_last_edit": "2026-06-19T20:07:55.052Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\ExtractionQueueItem.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:08:02.513Z",
+      "last_read_at": "2026-06-19T20:08:02.513Z",
+      "mtime_at_last_read": "2026-06-19T20:08:02.387Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:08:02.513Z",
+      "mtime_at_last_edit": "2026-06-19T20:08:02.387Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\ITranscriptExtractionQueue.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:08:08.273Z",
+      "last_read_at": "2026-06-19T20:08:08.273Z",
+      "mtime_at_last_read": "2026-06-19T20:08:08.146Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:08:08.273Z",
+      "mtime_at_last_edit": "2026-06-19T20:08:08.146Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\TranscriptExtractionQueue.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:08:16.066Z",
+      "last_read_at": "2026-06-19T20:08:16.066Z",
+      "mtime_at_last_read": "2026-06-19T20:08:15.892Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:08:16.066Z",
+      "mtime_at_last_edit": "2026-06-19T20:08:15.892Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Application\\Features\\TranscriptIngest\\TranscriptExtractionWorker.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:09:16.464Z",
+      "last_read_at": "2026-06-19T20:09:16.464Z",
+      "mtime_at_last_read": "2026-06-19T20:09:16.352Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:09:16.464Z",
+      "mtime_at_last_edit": "2026-06-19T20:09:16.352Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Api\\Controllers\\ExtractionJobsController.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:09:25.008Z",
+      "last_read_at": "2026-06-19T20:09:25.008Z",
+      "mtime_at_last_read": "2026-06-19T20:09:24.891Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:09:25.008Z",
+      "mtime_at_last_edit": "2026-06-19T20:09:24.891Z"
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\src\\AstraMemory.Infrastructure\\Services\\IMemoryWriteService.cs": {
+      "read_count": 1,
+      "first_read_at": "2026-06-19T20:11:58.533Z",
+      "last_read_at": "2026-06-19T20:11:58.533Z",
+      "mtime_at_last_read": "2026-06-19T19:42:28.296Z",
+      "size_at_last_read": 1415,
+      "content_bytes": 0,
+      "content": null
+    },
+    "C:\\work\\mega\\memory\\.claude\\worktrees\\feat-followups\\tests\\AstraMemory.Tests\\TranscriptIngest\\TranscriptExtractionWorkerTests.cs": {
+      "read_count": 0,
+      "first_read_at": "2026-06-19T20:12:28.332Z",
+      "last_read_at": "2026-06-19T20:12:28.332Z",
+      "mtime_at_last_read": "2026-06-19T20:12:28.215Z",
+      "size_at_last_read": 0,
+      "content_bytes": 0,
+      "content": null,
+      "last_edit_at": "2026-06-19T20:12:28.332Z",
+      "mtime_at_last_edit": "2026-06-19T20:12:28.215Z"
+    }
+  }
+}

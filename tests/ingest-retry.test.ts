@@ -2,10 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync, chmodSync, mkdirSync, rmSync } from 'node:fs';
-import { tmpdir } from 'node:os';
+import { tmpdir, platform } from 'node:os';
 import { dirname, join } from 'node:path';
 
-// TODO Wave 2/3: these tests invoke the bash helper and require bash on PATH.
+// Skipped on Windows — these invoke the bash hook helper and require bash on PATH.
+const SKIP_ON_WIN = platform() === 'win32';
 
 const HELPER = join(process.cwd(), 'hooks', 'scripts', '_ingest-transcript.sh');
 
@@ -29,7 +30,7 @@ function withServer(handler: (req: import('node:http').IncomingMessage, res: imp
       resolve({
         url: `http://127.0.0.1:${port}`,
         calls,
-        close: () => new Promise<void>((r) => srv.close(() => r())),
+        close: () => new Promise<void>((r) => srv.close(() => { r(); })),
       });
     });
   });
@@ -89,7 +90,7 @@ function runHook({ url, event, transcriptPath, pluginRoot, retries = 2 }: RunHoo
   });
 }
 
-describe('ingest-retry (bash helper)', () => {
+describe.skipIf(SKIP_ON_WIN)('ingest-retry (bash helper)', () => {
   it('retries exactly N=2 times on 503 then gives up', async () => {
     const pluginRoot = fakePluginRoot();
     const transcript = fakeTranscript();

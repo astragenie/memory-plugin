@@ -1,6 +1,9 @@
 // Payload-shape test for hooks/scripts/_ingest-transcript.sh.
-// TODO Wave 2/3: requires bash on PATH.
+// Requires bash on PATH — skipped on Windows where bash may not be available
+// in the runner environment. CI Linux/macOS runs these for real.
 import { describe, it, expect } from 'vitest';
+import { platform } from 'node:os';
+const SKIP_ON_WIN = platform() === 'win32';
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { mkdtempSync, writeFileSync, chmodSync, mkdirSync, rmSync } from 'node:fs';
@@ -42,7 +45,7 @@ function withServer(handler: (req: import('node:http').IncomingMessage, res: imp
       resolve({
         url: `http://127.0.0.1:${port}`,
         calls,
-        close: () => new Promise<void>((r) => srv.close(() => r())),
+        close: () => new Promise<void>((r) => srv.close(() => { r(); })),
       });
     });
   });
@@ -111,7 +114,7 @@ function runHook({ url, event, transcriptPath, pluginRoot, sessionId, retries = 
   });
 }
 
-describe('ingest-payload (bash helper)', () => {
+describe.skipIf(SKIP_ON_WIN)('ingest-payload (bash helper)', () => {
   it('POST body matches /ingest/transcript contract', async () => {
     const pluginRoot = fakePluginRoot();
     const transcript = fakeTranscript();

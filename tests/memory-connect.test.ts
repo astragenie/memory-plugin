@@ -54,7 +54,7 @@ function withServer(
           if (typeof (srv as unknown as { closeAllConnections?: () => void }).closeAllConnections === 'function') {
             (srv as unknown as { closeAllConnections: () => void }).closeAllConnections();
           }
-          return new Promise<void>((r) => srv.close(() => r()));
+          return new Promise<void>((r) => srv.close(() => { r(); }));
         },
       });
     });

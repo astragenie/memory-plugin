@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "updatedAt": "2026-06-27T10:06:55.063Z",
+  "currentRun": {
+    "title": "Wave 2 fan-out TS review",
+    "goal": "",
+    "mode": "",
+    "status": "active",
+    "startedAt": "2026-06-27T08:47:33.621Z",
+    "updatedAt": "2026-06-27T10:06:55.063Z",
+    "next": "",
+    "gates": {
+      "review": {
+        "status": "passed",
+        "updatedAt": "2026-06-27T10:06:55.063Z",
+        "note": "Codebase is type-safe and structurally sound; three medium findings (teardown race, doc drift, noUncheckedIndexedAccess gap) require followup before stable release but do not block v0.1.0-rc.1."
+      },
+      "validation": null,
+      "deployment": {
+        "dev": null,
+        "prod": null
+      },
+      "blocked": null,
+      "escalation": null
+    },
+    "artifacts": {
+      "runBrief": null,
+      "handoffs": [],
+      "reviewResult": "C:\\work\\mega\\astramemory-plugin\\.claude\\artifacts\\crew\\reviews\\20260627T095913Z-review-result-v0-1-0-rc-1-final-ts-review.md",
+      "validationPlan": null,
+      "validationResult": null,
+      "deploymentChecks": {
+        "dev": null,
+        "prod": null
+      },
+      "finalSynthesis": null
+    }
+  },
+  "recentRuns": []
+}

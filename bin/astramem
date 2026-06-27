@@ -1,0 +1,98 @@
+#!/usr/bin/env bun
+// astramem — AstraMemory CLI dispatcher (Wave 1 stub)
+// Subcommands: ingest | recall | remember | health | config | doctor | connect
+// Wave 2/3 will wire each subcommand to its implementation.
+// Global: --provider local|saas|auto  (parsed, stored, passed to subcommands)
+//         --help | -h                  (prints usage)
+//         --version                    (prints 0.4.0-rc.1)
+
+const VERSION = '0.4.0-rc.1';
+
+const SUBCOMMANDS = ['ingest', 'recall', 'remember', 'health', 'config', 'doctor', 'connect'] as const;
+type Subcommand = typeof SUBCOMMANDS[number];
+type Provider = 'local' | 'saas' | 'auto';
+
+const HELP = `
+astramem — AstraMemory CLI v${VERSION}
+
+Usage: astramem [--provider local|saas|auto] <subcommand> [options]
+
+Subcommands:
+  ingest     Ingest a payload into AstraMemory (fire-and-forget)
+  recall     Recall memories matching a query
+  remember   Store a new memory item
+  health     Probe the selected provider's /health endpoint
+  config     Get or set configuration (config get [key] | config set <key> <val>)
+  doctor     Diagnose selector resolution, logs, env vars, and config
+  connect    Connect to the local AstraMemory daemon
+
+Global flags:
+  --provider local|saas|auto  Override provider selection
+  --help, -h                  Show this help message
+  --version                   Show version
+
+Run 'astramem <subcommand> --help' for subcommand-specific usage.
+`.trimStart();
+
+function parseGlobals(argv: string[]): { provider: Provider | null; remaining: string[] } {
+  const remaining: string[] = [];
+  let provider: Provider | null = null;
+
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === '--provider' && i + 1 < argv.length) {
+      const val = argv[++i]!;
+      if (val === 'local' || val === 'saas' || val === 'auto') {
+        provider = val;
+      } else {
+        process.stderr.write(`astramem: unknown provider '${val}'. Use local|saas|auto.\n`);
+        process.exit(1);
+      }
+    } else {
+      remaining.push(argv[i]!);
+    }
+  }
+  return { provider, remaining };
+}
+
+async function main(): Promise<void> {
+  const args = process.argv.slice(2);
+
+  if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
+    process.stdout.write(HELP);
+    process.exit(0);
+  }
+
+  if (args[0] === '--version') {
+    process.stdout.write(VERSION + '\n');
+    process.exit(0);
+  }
+
+  const { provider, remaining } = parseGlobals(args);
+
+  // Re-check --help / --version after stripping globals
+  if (remaining.length === 0 || remaining[0] === '--help' || remaining[0] === '-h') {
+    process.stdout.write(HELP);
+    process.exit(0);
+  }
+  if (remaining[0] === '--version') {
+    process.stdout.write(VERSION + '\n');
+    process.exit(0);
+  }
+
+  const subcommand = remaining[0]!;
+
+  if (!(SUBCOMMANDS as readonly string[]).includes(subcommand)) {
+    process.stderr.write(`astramem: unknown subcommand '${subcommand}'.\n\n`);
+    process.stdout.write(HELP);
+    process.exit(1);
+  }
+
+  const providerNote = provider ? ` (provider=${provider})` : '';
+  process.stdout.write(`${subcommand}: not yet wired (Wave 2/3)${providerNote}\n`);
+  process.exit(0);
+}
+
+main().catch((e: unknown) => {
+  process.stderr.write(`astramem: unexpected error: ${(e as Error).message || e}\n`);
+  process.exit(1);
+});
