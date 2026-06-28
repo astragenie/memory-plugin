@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.5.0 — 2026-06-28
+
+### Changed
+- **Plugin manifest `name` re-flipped to `"astramem"`** after the `0.4.0` post-release revert
+  to `"memory"`. Slash-command namespace returns to `/astramem:recall` and
+  `/astramem:remember`. Users who installed `0.4.0` after the revert should reinstall under
+  the `astramem` key.
+
+### Migration
+- `claude /plugin uninstall memory@astra-marketplace` (if installed under the reverted name)
+- `claude /plugin install astramem@astra-marketplace`
+- Any saved keybindings, hooks, or scripts referencing `/memory:recall` or
+  `/memory:remember` must be updated to `/astramem:recall` and `/astramem:remember`.
+
 ## 0.4.0 — 2026-06-27
 
 ### Renamed
