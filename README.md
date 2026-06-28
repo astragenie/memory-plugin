@@ -27,7 +27,7 @@ astramem connect          # local daemon (astramem-local must be running)
 astramem connect ABCD-1234 --env prod
 ```
 
-After pairing, Claude Code hooks and slash commands (`/recall`, `/remember`) resolve the provider
+After pairing, Claude Code hooks and slash commands (`/astramem:recall`, `/astramem:remember`) resolve the provider
 automatically. No manual env-var export required for day-to-day use.
 
 ---
@@ -36,8 +36,8 @@ automatically. No manual env-var export required for day-to-day use.
 
 | Command | What it does |
 | --- | --- |
-| `/recall <query>` | Searches astramem and injects the top 5 hits into context. |
-| `/remember <text>` | Stores the text as a typed memory (`fact`, `decision`, `note`, etc.). |
+| `/astramem:recall <query>` | Searches astramem and injects the top 5 hits into context. |
+| `/astramem:remember <text>` | Stores the text as a typed memory (`fact`, `decision`, `note`, etc.). |
 
 Both commands invoke `bin/astramem` internally via `bun ${CLAUDE_PLUGIN_ROOT}/bin/astramem`.
 If the provider is unreachable they suggest `astramem health` for diagnosis.
@@ -227,13 +227,20 @@ equivalents):
 
 ---
 
-## Upgrading from memory-plugin (pre-v0.4.0)
+## Upgrading from memory-plugin (any pre-v0.5.0)
 
-See `CHANGELOG.md` v0.4.0 entry for the full list of breaking changes. Quick checklist:
+See `CHANGELOG.md` v0.5.0 entry for the breakdown. Quick checklist:
 
-1. Rename slash commands: `/memory:recall` → `/recall`, `/memory:remember` → `/remember`
-   (or install as `@astragenie/astramem-plugin` — commands are unnamespaced by default).
-2. Run `astramem connect` once to write the unified config dir.
-3. Remove `ASTRAMEMORY_API_URL` and `ASTRAMEMORY_API_KEY` raw env vars from your shell rc
+1. Reinstall under the new key:
+   ```bash
+   claude /plugin uninstall memory@astra-marketplace
+   claude /plugin marketplace update astra-marketplace
+   claude /plugin install astramem@astra-marketplace
+   ```
+2. Rename slash command references: `/memory:recall` → `/astramem:recall`,
+   `/memory:remember` → `/astramem:remember`. Update any saved keybindings, hooks, or
+   scripts.
+3. Run `astramem connect` once to write the unified config dir.
+4. Remove `ASTRAMEMORY_API_URL` and `ASTRAMEMORY_API_KEY` raw env vars from your shell rc
    (deprecated; removed at v1.7).
-4. Restart Claude Code.
+5. Restart Claude Code.
