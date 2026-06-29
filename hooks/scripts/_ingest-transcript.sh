@@ -1,52 +1,20 @@
 #!/usr/bin/env bash
 # Shared helper for AstraMemory transcript ingest hooks.
 #
-# Usage (production):
+# Usage:
 #   _ingest-transcript.sh --event pre_compact|session_end|subagent_stop \
 #                         [--max-turns N] [--max-chars N]
 #   Reads Claude Code hook payload (JSON) on stdin.
 #   Always exits 0 (never block compaction / session close).
 #
-# Usage (test):
-#   _ingest-transcript.sh --scrub-only <file>
-#   Reads file content, prints JSON {"text": "...", "hits": N} to stdout.
-
+# Scrubbing: client-side secret redaction is handled exclusively by
+# src/lib/scrub.ts via `astramem ingest-transcript`. The legacy --scrub-only
+# bash path has been removed (Slice 3.5) — it never processed real content
+# because it matched top-level .role, which doesn't exist in real JSONL.
 set +e
 set -u
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# ---- scrub-only mode --------------------------------------------------------
-if [ "${1:-}" = "--scrub-only" ]; then
-  input="$(cat "${2:?scrub-only requires a file arg}")"
-  hits=0
-
-  scrub_pattern() {
-    local pattern="$1" replacement="$2"
-    # Count matches first, then substitute.
-    local n
-    n="$(printf '%s' "$input" | grep -oE "$pattern" | wc -l | tr -d ' ')"
-    # Defensive: if `wc` returns blank (rare, but `set -u` would explode on the
-    # arithmetic compare below), default to 0.
-    n="${n:-0}"
-    if [ "$n" -gt 0 ]; then
-      hits=$((hits + n))
-      # Use `#` as the sed delimiter — none of the four scrub patterns contain `#`,
-      # whereas `|` collides with the alternation inside the generic-secret pattern
-      # and would prematurely close the `s///` expression.
-      input="$(printf '%s' "$input" | sed -E "s#$pattern#$replacement#g")"
-    fi
-  }
-
-  scrub_pattern 'eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]+' '[redacted:jwt]'
-  scrub_pattern 'AKIA[0-9A-Z]{16}'                                          '[redacted:aws-key]'
-  scrub_pattern 'sk-(ant-)?[A-Za-z0-9_-]{20,}'                              '[redacted:anthropic-key]'
-  scrub_pattern '(api[_-]?key|secret|password|token)[[:space:]]*[:=][[:space:]]*['"'"'"]?[A-Za-z0-9_./+=-]{16,}' '[redacted:generic-secret]'
-
-  # JSON-safe output.
-  printf '%s' "$input" | jq -Rs --argjson hits "$hits" '{text: ., hits: $hits}'
-  exit 0
-fi
 
 # ---- production mode --------------------------------------------------------
 . "$SCRIPT_DIR/_load-env.sh"
@@ -125,21 +93,13 @@ turns_json="$(
 )"
 [ -z "$turns_json" ] || [ "$turns_json" = "[]" ] && exit 0
 
-# Client-side scrub each turn's text.
-# `jq -c '.[]'` emits one line per element so the while loop sees one object per iteration.
-tmp_scrub_input="$(mktemp)"
-trap 'rm -f "$tmp_scrub_input"' EXIT
-scrubbed_turns_json="$(
-  printf '%s' "$turns_json" | jq -c '.[]' | while IFS= read -r t; do
-    printf '%s' "$t" | jq -r '.text' > "$tmp_scrub_input"
-    scrubbed="$("$SCRIPT_DIR/_ingest-transcript.sh" --scrub-only "$tmp_scrub_input" 2>/dev/null)"
-    [ -z "$scrubbed" ] && scrubbed="$(jq -nc --rawfile s "$tmp_scrub_input" '{text: $s, hits: 0}')"
-    printf '%s' "$t" | jq -c --argjson s "$scrubbed" '.text = $s.text | .scrub_hits = $s.hits'
-  done | jq -sc '.'
-)"
-
-total_client_hits="$(printf '%s' "$scrubbed_turns_json" | jq '[.[].scrub_hits] | add // 0')"
-stripped_turns_json="$(printf '%s' "$scrubbed_turns_json" | jq -c '[.[] | del(.scrub_hits)]')"
+# NOTE (Slice 3.5): bash scrub path removed — it called --scrub-only (deleted)
+# and matched top-level .role which never exists in real JSONL transcripts.
+# Scrubbing is now exclusively handled by src/lib/scrub.ts via
+# `astramem ingest-transcript`. This bash path is superseded by Slice 4's shim.
+# Pass turns through unscrubbed here; Slice 4 replaces this file wholesale.
+total_client_hits=0
+stripped_turns_json="$turns_json"
 
 body="$(jq -nc \
   --arg event "$EVENT" \

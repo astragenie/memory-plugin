@@ -77,9 +77,10 @@ export const STRING_PATTERNS: Array<[RegExp, string, string]> = [
     '[REDACTED:stripe-key]',
     'stripe-key',
   ],
-  // Google API keys
+  // Google API keys — {35,} to handle real key length variation; no trailing \b
+  // because keys may end in `-` or `_` which aren't word chars.
   [
-    /\bAIza[0-9A-Za-z_-]{35}\b/g,
+    /\bAIza[0-9A-Za-z_-]{35,}/g,
     '[REDACTED:google-api-key]',
     'google-api-key',
   ],
