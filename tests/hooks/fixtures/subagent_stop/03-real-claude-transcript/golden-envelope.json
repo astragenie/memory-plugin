@@ -1,0 +1,39 @@
+{
+  "event": "subagent_stop",
+  "session_id": "aabbccdd-1111-2222-3333-000000000099",
+  "project_id": "my-project",
+  "cwd": "/home/user/projects/my-project",
+  "captured_at": "__SENTINEL_CAPTURED_AT__",
+  "turns": [
+    {
+      "role": "user",
+      "text": "Run the build and tell me the result.",
+      "ts": "2026-06-29T10:01:00.000Z"
+    },
+    {
+      "role": "assistant",
+      "text": "I will run the build now.",
+      "ts": "2026-06-29T10:01:05.000Z"
+    },
+    {
+      "role": "assistant",
+      "text": "Build passed with zero errors.",
+      "ts": "2026-06-29T10:01:15.000Z"
+    },
+    {
+      "role": "user",
+      "text": "What was the test count?",
+      "ts": "2026-06-29T10:01:20.000Z"
+    },
+    {
+      "role": "assistant",
+      "text": "316 tests passed, 18 skipped.",
+      "ts": "2026-06-29T10:01:25.000Z"
+    }
+  ],
+  "client_scrub_applied": true,
+  "client_scrub_hits": 0,
+  "client_version": "__SENTINEL_CLIENT_VERSION__",
+  "client_scrub_version": "__SENTINEL_SCRUB_VERSION__",
+  "client_scrub_hits_by_label": {}
+}

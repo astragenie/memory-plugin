@@ -236,4 +236,24 @@ describe('fixture-replay — hook payload golden-body gate (FEAT 4a §5.2)', () 
     const golden = readJson<TranscriptIngestPayload>(join(fixturePath, 'golden-envelope.json'));
     expect(applySentinels(actual!)).toEqual(golden);
   });
+
+  // -------------------------------------------------------------------------
+  // subagent_stop / 03-real-claude-transcript (real nested JSONL shape gate)
+  // -------------------------------------------------------------------------
+
+  it('subagent_stop/03-real-claude-transcript: real nested JSONL shape — tool_use/system/tool_result filtered; only text turns in envelope', async () => {
+    const fixturePath = join(FIXTURE_ROOT, 'subagent_stop', '03-real-claude-transcript');
+    const actual = await replayFixture(fixturePath, 'subagent_stop');
+    expect(actual).toBeDefined();
+    expect(actual!.event).toBe('subagent_stop');
+    // 5 turns: user(str) + assistant(text-block) + assistant(text+tool_use) +
+    //          user(str) + assistant(text-block). tool_result and pure-tool_use lines dropped.
+    expect(actual!.turns).toHaveLength(5);
+    // All extracted turns must have non-empty text (no empty strings survived)
+    for (const turn of actual!.turns) {
+      expect(turn.text.length).toBeGreaterThan(0);
+    }
+    const golden = readJson<TranscriptIngestPayload>(join(fixturePath, 'golden-envelope.json'));
+    expect(applySentinels(actual!)).toEqual(golden);
+  });
 });

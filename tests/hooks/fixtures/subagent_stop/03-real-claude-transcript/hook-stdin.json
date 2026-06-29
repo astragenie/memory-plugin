@@ -1,0 +1,14 @@
+{
+  "session_id": "aabbccdd-1111-2222-3333-000000000099",
+  "transcript_path": "__FIXTURE_TRANSCRIPT_PATH__",
+  "cwd": "/home/user/projects/my-project",
+  "permission_mode": "bypassPermissions",
+  "agent_id": "a1b2c3d4e5f60099",
+  "agent_type": "",
+  "hook_event_name": "SubagentStop",
+  "stop_hook_active": false,
+  "agent_transcript_path": "__FIXTURE_TRANSCRIPT_PATH__",
+  "last_assistant_message": "Done.",
+  "background_tasks": [],
+  "session_crons": []
+}

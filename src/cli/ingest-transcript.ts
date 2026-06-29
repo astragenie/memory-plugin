@@ -124,10 +124,33 @@ function readClientVersion(): string {
 // ---------------------------------------------------------------------------
 
 interface RawLine {
+  // flat shape (Slice 2 synthesized fixtures)
   role?: unknown;
   content?: unknown;
   text?: unknown;
   timestamp?: unknown;
+  // real Claude Code nested shape
+  type?: unknown;
+  message?: unknown;
+  uuid?: unknown;
+  parentUuid?: unknown;
+}
+
+/** Extract only {type:'text', text:'...'} blocks from a content block array. */
+function extractTextFromBlocks(blocks: Array<unknown>): string {
+  let out = '';
+  for (const block of blocks) {
+    if (
+      block !== null &&
+      typeof block === 'object' &&
+      (block as Record<string, unknown>)['type'] === 'text' &&
+      typeof (block as Record<string, unknown>)['text'] === 'string'
+    ) {
+      out += (block as Record<string, unknown>)['text'] as string;
+    }
+    // tool_use, tool_result, thinking, etc. — silently skipped
+  }
+  return out;
 }
 
 function extractTurnsFromJsonl(raw: string): Array<{ role: string; text: string; ts?: string }> {
@@ -142,33 +165,49 @@ function extractTurnsFromJsonl(raw: string): Array<{ role: string; text: string;
       continue; // skip malformed lines
     }
 
-    const role = parsed.role;
+    // Resolve role: try top-level first (flat fixture shape), then nested .message.role
+    // (real Claude Code shape). Skip any line whose type is not user/assistant at
+    // either level (system, attachment, tool_result, summary, etc.).
+    const msgObj =
+      parsed.message !== null &&
+      parsed.message !== undefined &&
+      typeof parsed.message === 'object'
+        ? (parsed.message as Record<string, unknown>)
+        : undefined;
+
+    const role = parsed.role ?? (msgObj ? msgObj['role'] : undefined);
     if (role !== 'user' && role !== 'assistant') continue;
 
-    // Extract text: prefer 'text', fall back to 'content' (Claude hook payloads may use either)
+    // Resolve content source: prefer top-level .text / .content, then message-level
+    // equivalents (.text / .content). Order mirrors the spec algorithm.
+    const contentSource: unknown =
+      parsed.text ??
+      parsed.content ??
+      (msgObj ? (msgObj['text'] ?? msgObj['content']) : undefined);
+
+    // Extract text:
+    //   - string: use directly
+    //   - array of blocks: concatenate {type:'text', text:'...'} entries only;
+    //     tool_use, tool_result, thinking blocks are silently dropped (privacy: tool args
+    //     may contain secrets; "transcript" intent is human-readable turns only)
     let text = '';
-    if (typeof parsed.text === 'string') {
-      text = parsed.text;
-    } else if (typeof parsed.content === 'string') {
-      text = parsed.content;
-    } else if (Array.isArray(parsed.content)) {
-      // Content blocks: extract text from {type:'text', text:'...'} entries
-      for (const block of parsed.content as Array<unknown>) {
-        if (
-          block !== null &&
-          typeof block === 'object' &&
-          (block as Record<string, unknown>)['type'] === 'text' &&
-          typeof (block as Record<string, unknown>)['text'] === 'string'
-        ) {
-          text += (block as Record<string, unknown>)['text'] as string;
-        }
-      }
+    if (typeof contentSource === 'string') {
+      text = contentSource;
+    } else if (Array.isArray(contentSource)) {
+      text = extractTextFromBlocks(contentSource);
     }
 
     if (!text) continue;
 
-    const ts = typeof parsed.timestamp === 'string' ? parsed.timestamp : undefined;
-    turns.push({ role, text, ...(ts !== undefined ? { ts } : {}) });
+    // Resolve timestamp: top-level wins (real transcripts put it at top-level).
+    const ts =
+      typeof parsed.timestamp === 'string'
+        ? parsed.timestamp
+        : typeof msgObj?.['timestamp'] === 'string'
+          ? (msgObj['timestamp'] as string)
+          : undefined;
+
+    turns.push({ role: role as string, text, ...(ts !== undefined ? { ts } : {}) });
   }
   return turns;
 }
