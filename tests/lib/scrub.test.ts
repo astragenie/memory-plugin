@@ -40,7 +40,7 @@ describe('scrub — bearer token redaction', () => {
         authorization: `Bearer ${HEX64}`,
         // 'x-custom' is also not sensitive; bearer inside gets scrubbed
         'x-custom': `prefix Bearer ${HEX64} suffix`,
-        // 'token' IS a sensitive key → value becomes '[REDACTED]'
+        // 'token' IS a sensitive key → value becomes '[REDACTED:sensitive-key]'
         token: `Bearer ${HEX64}`,
       },
       data: 'innocuous',
@@ -53,7 +53,7 @@ describe('scrub — bearer token redaction', () => {
     // 'x-custom' value: bearer string is scrubbed out
     expect(headers['x-custom']).not.toContain(HEX64);
     // 'token' key: entire value replaced
-    expect(headers['token']).toBe('[REDACTED]');
+    expect(headers['token']).toBe('[REDACTED:sensitive-key]');
     // Overall: no hex token anywhere
     expect(JSON.stringify(result)).not.toContain(HEX64);
   });
@@ -76,37 +76,37 @@ describe('scrub — bearer token redaction', () => {
 describe('scrub — sensitive key redaction', () => {
   it('redacts api_key value', () => {
     const result = scrub({ api_key: 'mysecret123' }) as Record<string, unknown>;
-    expect(result['api_key']).toBe('[REDACTED]');
+    expect(result['api_key']).toBe('[REDACTED:sensitive-key]');
   });
 
   it('redacts apikey (no separator)', () => {
     const result = scrub({ apikey: 'xyz789' }) as Record<string, unknown>;
-    expect(result['apikey']).toBe('[REDACTED]');
+    expect(result['apikey']).toBe('[REDACTED:sensitive-key]');
   });
 
   it('redacts api-key (dash separator)', () => {
     const result = scrub({ 'api-key': 'abc' }) as Record<string, unknown>;
-    expect(result['api-key']).toBe('[REDACTED]');
+    expect(result['api-key']).toBe('[REDACTED:sensitive-key]');
   });
 
   it('redacts token field', () => {
     const result = scrub({ token: 'tok_live_abc' }) as Record<string, unknown>;
-    expect(result['token']).toBe('[REDACTED]');
+    expect(result['token']).toBe('[REDACTED:sensitive-key]');
   });
 
   it('redacts secret field', () => {
     const result = scrub({ secret: 'shhh' }) as Record<string, unknown>;
-    expect(result['secret']).toBe('[REDACTED]');
+    expect(result['secret']).toBe('[REDACTED:sensitive-key]');
   });
 
   it('redacts password field', () => {
     const result = scrub({ password: 'hunter2' }) as Record<string, unknown>;
-    expect(result['password']).toBe('[REDACTED]');
+    expect(result['password']).toBe('[REDACTED:sensitive-key]');
   });
 
   it('redacts bearer field name', () => {
     const result = scrub({ bearer: 'tok' }) as Record<string, unknown>;
-    expect(result['bearer']).toBe('[REDACTED]');
+    expect(result['bearer']).toBe('[REDACTED:sensitive-key]');
   });
 
   it('preserves non-sensitive keys', () => {
@@ -130,7 +130,7 @@ describe('scrub — nested + mixed structures', () => {
     };
     const result = scrub(input) as Record<string, unknown>;
     const auth = (result['config'] as Record<string, unknown>)['auth'] as Record<string, unknown>;
-    expect(auth['password']).toBe('[REDACTED]');
+    expect(auth['password']).toBe('[REDACTED:sensitive-key]');
     expect(auth['retries']).toBe(3);
     expect(result['name']).toBe('test');
   });
@@ -141,7 +141,7 @@ describe('scrub — nested + mixed structures', () => {
       { id: 2, name: 'ok' },
     ];
     const result = scrub(input) as Array<Record<string, unknown>>;
-    expect(result[0]!['token']).toBe('[REDACTED]');
+    expect(result[0]!['token']).toBe('[REDACTED:sensitive-key]');
     expect(result[0]!['id']).toBe(1);
     expect(result[1]!['name']).toBe('ok');
   });

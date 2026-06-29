@@ -24,6 +24,7 @@ const VALID_ENVELOPE = {
   client_scrub_applied: true,
   client_scrub_hits: 0,
   client_version: '0.5.0',
+  client_scrub_version: '2',
 };
 
 // ---------------------------------------------------------------------------

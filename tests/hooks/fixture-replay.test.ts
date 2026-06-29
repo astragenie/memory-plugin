@@ -25,6 +25,7 @@ import type { TranscriptIngestPayload } from '../../src/contracts/wire.ts';
 const FIXTURE_ROOT = join(import.meta.dirname, 'fixtures');
 const SENTINEL_CAPTURED_AT = '__SENTINEL_CAPTURED_AT__';
 const SENTINEL_CLIENT_VERSION = '__SENTINEL_CLIENT_VERSION__';
+const SENTINEL_SCRUB_VERSION = '__SENTINEL_SCRUB_VERSION__';
 
 // ---------------------------------------------------------------------------
 // Environment isolation (redirect APPDATA/HOME so log writes stay in temp)
@@ -72,6 +73,7 @@ function applySentinels(envelope: TranscriptIngestPayload): TranscriptIngestPayl
     ...envelope,
     captured_at: SENTINEL_CAPTURED_AT,
     client_version: SENTINEL_CLIENT_VERSION,
+    client_scrub_version: SENTINEL_SCRUB_VERSION,
   };
 }
 

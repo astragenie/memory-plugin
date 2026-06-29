@@ -18,5 +18,7 @@
   ],
   "client_scrub_applied": true,
   "client_scrub_hits": 1,
-  "client_version": "__SENTINEL_CLIENT_VERSION__"
+  "client_version": "__SENTINEL_CLIENT_VERSION__",
+  "client_scrub_version": "__SENTINEL_SCRUB_VERSION__",
+  "client_scrub_hits_by_label": { "bearer": 1 }
 }
