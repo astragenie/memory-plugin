@@ -431,3 +431,7 @@ The health probe timeout is 5s; the CLI fire-and-forget budget is 2s. On Windows
 ### M7 — Slice 6 conflated contract bug-fix with finalize work
 
 Commit `06d20a8` bundled the `ingestTranscript()` addition (a contract bug-fix) with finalize work. Future contract regressions should ship as standalone patches for cleaner cherry-pick and backport. This is a process recommendation, not a code change.
+
+### M8 — Test-hook export hygiene
+
+`_resetHealthCache`, `_setHealthProbeFn` (src/lib/selector.ts), `_resetEnvState` (src/lib/env.ts) are still exported from production modules. Current NODE_ENV guard silent no-ops them outside test — worse failure mode than throwing because it hides programming errors. Proposal for v0.6.0: move to `src/lib/_test-utils.ts`, omit from package `exports` map, fail loudly on misuse outside test. Today's guard accepted for v0.5.0 ship but tracked here.

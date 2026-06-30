@@ -186,6 +186,8 @@ export class SaasProvider implements MemoryProvider {
       const { output, hitsByLabel } = scrubWithLabels(turn.text);
       for (const [label, count] of Object.entries(hitsByLabel)) {
         mergedHitsByLabel[label] = (mergedHitsByLabel[label] ?? 0) + count;
+        // Trust caller's prior counts; this layer ADDS scrubber output for any text the
+        // caller missed. Sum may exceed actual redactions if caller mis-counted upstream.
         totalHits += count;
       }
       return { ...turn, text: output };
