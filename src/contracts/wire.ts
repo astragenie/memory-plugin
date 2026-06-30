@@ -86,6 +86,10 @@ export const TranscriptTurnSchema = z.object({
 
 export type TranscriptTurn = z.infer<typeof TranscriptTurnSchema>;
 
+// Aligned with SaaS canonical IngestTranscriptRequest at:
+//   C:\work\mega\memory\src\AstraMemory.Api\Models\IngestTranscriptRequest.cs
+// Plus Slice 3.5 additions (client_scrub_version, client_scrub_hits_by_label).
+// `wire_version` field is pending — added when SaaS DTO catches up (FEAT 4a wire-contract slice).
 export const TranscriptIngestPayloadSchema = z.object({
   event: z.enum(['pre_compact', 'session_end', 'subagent_stop']),
   session_id: z.string(),

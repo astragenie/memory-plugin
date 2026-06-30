@@ -1,7 +1,20 @@
 /**
  * SaaS AstraMemory provider.
  *
- * Implements MemoryProvider against the remote SaaS gateway.
+ * Implements MemoryProvider against the SaaS gateway at MEMORY_API_URL_SAAS
+ * (canonical deployment: https://api.astramemory.com).
+ *
+ * Endpoint map vs SaaS server (see C:\work\mega\memory\src\AstraMemory.Api\Controllers):
+ *   - POST /ingest/transcript  → handled by TranscriptIngestController
+ *   - POST /memories/search    → handled by MemoriesController (recall)
+ *   - POST /memories           → handled by MemoriesController (remember)
+ *   - GET  /health             → handled by HealthController
+ *   - GET  /version            → handled by HealthController
+ *
+ * WIRE BUGS (FEAT 4a wire-contract unification — pending fix):
+ *   - recall() posts to /recall — SaaS has /memories/search
+ *   - remember() posts to /remember — SaaS has /memories POST
+ *   - Missing ingestTranscript() method — hooks via Bun CLI use LocalProvider only
  *
  * Bearer is read from lib/clerkAuthFile.ts (already exists — Wave 1 migrated).
  * URL from config.saas.url or env MEMORY_API_URL_SAAS.

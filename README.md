@@ -161,6 +161,26 @@ All hooks exit 0 and never block the triggering event. Failures (provider down, 
 
 ---
 
+## Provider endpoint map
+
+Each provider implements the same MemoryProvider interface but targets different backends:
+
+| Method | Local provider | SaaS provider |
+|---|---|---|
+| `ingest()` (generic item) | not used by hooks | `POST /ingest` |
+| `ingestTranscript()` (hooks) | `POST /ingest/transcript` | `POST /ingest/transcript` (pending — see FEAT 4a) |
+| `recall()` | `POST /recall` | `POST /memories/search` (pending — see FEAT 4a) |
+| `remember()` | `POST /remember` | `POST /memories` (pending — see FEAT 4a) |
+| `health()` | `GET /health` | `GET /health` |
+| `version()` | `GET /version` | `GET /version` |
+
+**Local daemon:** `https://github.com/astragenie/astramemory-local` running at `http://127.0.0.1:7777`  
+**SaaS deployment:** `https://api.astramemory.com` (configure via `MEMORY_API_URL_SAAS`)
+
+Both providers accept the same wire contract (SaaS-canonical envelope) for `ingestTranscript()`. See [FEAT 4a wire-contract unification](docs/superpowers/specs/2026-06-29-hooks-provider-migration-4a.md) for the full schema and three-repo convergence plan.
+
+---
+
 ## MCP server
 
 `.mcp.json` registers an HTTP MCP server at `${MEMORY_MCP_URL}/mcp`. The slash commands do
