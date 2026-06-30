@@ -126,7 +126,7 @@ async function main(): Promise<void> {
     }
     case 'doctor': {
       const { runDoctor } = await import('../src/cli/doctor.ts');
-      exitCode = await runDoctor();
+      exitCode = await runDoctor(subArgs);
       break;
     }
     case 'connect': {

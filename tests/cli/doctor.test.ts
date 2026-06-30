@@ -6,6 +6,8 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { runDoctor } from '../../src/cli/doctor.ts';
+import { resolveEnv, _resetEnvState } from '../../src/lib/env.ts';
+import { ENV } from '../../src/lib/env-specs.ts';
 
 function captureStdout() {
   const chunks: string[] = [];
@@ -19,7 +21,11 @@ function captureStdout() {
 describe('runDoctor', () => {
   let cap: ReturnType<typeof captureStdout>;
 
-  beforeEach(() => { cap = captureStdout(); });
+  beforeEach(() => {
+    cap = captureStdout();
+    // Reset env state so hit counts from prior tests don't leak.
+    _resetEnvState();
+  });
   afterEach(() => { cap.restore(); });
 
   it('always returns 0', async () => {
@@ -83,5 +89,74 @@ describe('runDoctor', () => {
     const text = cap.text();
     // Either shows entries or "(no entries)"
     expect(text).toMatch(/INGEST LOG|no entries/);
+  });
+
+  // ---------------------------------------------------------------------------
+  // Env deprecation section (Stage 2)
+  // ---------------------------------------------------------------------------
+
+  it('text output contains ENV DEPRECATION section with no-alias message when no legacy aliases used', async () => {
+    // No resolveEnv calls with legacy aliases before running doctor.
+    await runDoctor();
+    const text = cap.text();
+    expect(text).toMatch(/ENV DEPRECATION/);
+    expect(text).toMatch(/no deprecated aliases used in this process/);
+  });
+
+  it('text output lists alias hit counts after legacy alias is resolved', async () => {
+    // Set a legacy alias in the process env and resolve it once to register hits.
+    const LEGACY = 'MEMORY_SESSION_MAX_TURNS';
+    const original = process.env[LEGACY];
+    process.env[LEGACY] = '30';
+    // Ensure the canonical is NOT set so the alias actually fires.
+    const CANONICAL = ENV['sessionEndMaxTurns']!.canonical; // MEMORY_SESSIONEND_MAX_TURNS
+    const origCanonical = process.env[CANONICAL];
+    delete process.env[CANONICAL];
+
+    try {
+      resolveEnv(ENV['sessionEndMaxTurns']!); // 1 hit
+      resolveEnv(ENV['sessionEndMaxTurns']!); // 2 hits
+
+      await runDoctor();
+      const text = cap.text();
+      expect(text).toMatch(/ENV DEPRECATION/);
+      expect(text).toMatch(/DEPRECATED env alias used: MEMORY_SESSION_MAX_TURNS → MEMORY_SESSIONEND_MAX_TURNS \(2 hits\)/);
+    } finally {
+      if (original === undefined) delete process.env[LEGACY];
+      else process.env[LEGACY] = original;
+      if (origCanonical === undefined) delete process.env[CANONICAL];
+      else process.env[CANONICAL] = origCanonical;
+    }
+  });
+
+  it('JSON mode includes deprecation_hits array', async () => {
+    // Trigger one alias hit before running doctor in JSON mode.
+    const LEGACY = 'MEMORY_SESSION_MAX_TURNS';
+    const original = process.env[LEGACY];
+    process.env[LEGACY] = '25';
+    const CANONICAL = ENV['sessionEndMaxTurns']!.canonical;
+    const origCanonical = process.env[CANONICAL];
+    delete process.env[CANONICAL];
+
+    try {
+      resolveEnv(ENV['sessionEndMaxTurns']!); // 1 hit
+
+      const code = await runDoctor(['--json']);
+      expect(code).toBe(0);
+
+      const raw = cap.text();
+      const parsed = JSON.parse(raw) as { deprecation_hits: Array<{ canonical: string; alias: string; hits: number }> };
+      expect(Array.isArray(parsed.deprecation_hits)).toBe(true);
+
+      const hit = parsed.deprecation_hits.find((h) => h.alias === LEGACY);
+      expect(hit).toBeDefined();
+      expect(hit!.canonical).toBe(CANONICAL);
+      expect(hit!.hits).toBe(1);
+    } finally {
+      if (original === undefined) delete process.env[LEGACY];
+      else process.env[LEGACY] = original;
+      if (origCanonical === undefined) delete process.env[CANONICAL];
+      else process.env[CANONICAL] = origCanonical;
+    }
   });
 });

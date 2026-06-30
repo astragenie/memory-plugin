@@ -1,14 +1,62 @@
 // astramem doctor — diagnose selector resolution, logs, env vars, and config.
-// Walks: env vars, config presence + validation, local probe, saas probe, last 5 ingest log lines.
-// Always exits 0. Prints a human-readable diagnostic table.
+// Walks: env vars, config presence + validation, local probe, saas probe, last 5 ingest log lines,
+//        env-deprecation hit counts (alias reads accumulated in this process before doctor ran).
+// Always exits 0. Prints a human-readable diagnostic table, or JSON with --json.
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { unifiedConfigDir } from '../lib/datadir.ts';
 import { loadConfig } from '../lib/config.ts';
 import { readIngestLogTail } from '../lib/log.ts';
+import { getDeprecationHits } from '../lib/env.ts';
+import { ENV } from '../lib/env-specs.ts';
+
+// ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
+
+export interface DeprecationHit {
+  canonical: string;
+  alias: string;
+  hits: number;
+}
+
+/**
+ * Build deprecation hit list from the per-process snapshot.
+ * Maps alias → canonical by scanning all ENV specs.
+ * Returns entries sorted by hits descending.
+ * Does NOT call resolveEnv — avoids inflating the counters during doctor itself.
+ */
+function buildDeprecationHits(): DeprecationHit[] {
+  const raw = getDeprecationHits(); // Record<alias, count>
+  // Build alias → canonical reverse map from ENV registry
+  const aliasToCanonical = new Map<string, string>();
+  for (const spec of Object.values(ENV)) {
+    for (const alias of spec.aliases ?? []) {
+      // First canonical wins if alias appears in multiple specs (e.g. ASTRAMEMORY_API_KEY)
+      if (!aliasToCanonical.has(alias)) {
+        aliasToCanonical.set(alias, spec.canonical);
+      }
+    }
+  }
+
+  const hits: DeprecationHit[] = [];
+  for (const [alias, count] of Object.entries(raw)) {
+    if (count > 0) {
+      hits.push({
+        canonical: aliasToCanonical.get(alias) ?? '(unknown)',
+        alias,
+        hits: count,
+      });
+    }
+  }
+  // Sort hits descending
+  hits.sort((a, b) => b.hits - a.hits);
+  return hits;
+}
 
 /** Run the `astramem doctor` subcommand. Always returns 0. */
-export async function runDoctor(): Promise<number> {
+export async function runDoctor(args: string[] = []): Promise<number> {
+  const jsonMode = args.includes('--json');
   const lines: string[] = [];
   const configDir = unifiedConfigDir();
 
@@ -106,6 +154,39 @@ export async function runDoctor(): Promise<number> {
   } else {
     for (const l of tail) {
       lines.push(`  ${l}`);
+    }
+  }
+
+  // 6. Env deprecation — snapshot of alias hit counts accumulated BEFORE doctor ran.
+  //    buildDeprecationHits() only reads the in-process counter map; it does NOT
+  //    call resolveEnv(), so it cannot inflate the counts during this run.
+  const deprecationHits = buildDeprecationHits();
+
+  if (jsonMode) {
+    const output = {
+      env_vars: Object.fromEntries(
+        (['MEMORY_BEARER', 'MEMORY_API_URL', 'ASTRAMEM_PROVIDER'] as const).map((v) => [
+          v,
+          v === 'MEMORY_BEARER'
+            ? process.env[v]
+              ? '[present, redacted]'
+              : null
+            : process.env[v] ?? null,
+        ]),
+      ),
+      deprecation_hits: deprecationHits,
+    };
+    process.stdout.write(JSON.stringify(output, null, 2) + '\n');
+    return 0;
+  }
+
+  lines.push('');
+  lines.push('ENV DEPRECATION');
+  if (deprecationHits.length === 0) {
+    lines.push('  Env aliases: no deprecated aliases used in this process');
+  } else {
+    for (const { alias, canonical, hits } of deprecationHits) {
+      lines.push(`  DEPRECATED env alias used: ${alias} → ${canonical} (${hits} hit${hits === 1 ? '' : 's'})`);
     }
   }
 
