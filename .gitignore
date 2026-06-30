@@ -15,3 +15,8 @@ yarn-error.log*
 # Anything matching Clerk cached creds -- defensive in case a user copies
 # their auth.json into the plugin root.
 auth.json
+
+# Claude Code session noise (logs, state, transient marker dirs).
+.claude/logs/
+.claude/state/
+.in_use/
