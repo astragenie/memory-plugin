@@ -16,17 +16,36 @@ shape to both SaaS and local backends, closing out the wire-contract unification
 # 1. Install Bun (https://bun.sh) if not already present
 curl -fsSL https://bun.sh/install | bash
 
-# 2. Install dependencies
-bun install
+# 2. Install the plugin globally
+bun add -g @astragenie/astramem-plugin
 
-# 3. Link the bin so `astramem` is on your PATH
-bun link
-
-# 4. Pair this workstation to a provider
+# 3. Pair this workstation to a provider
 astramem connect          # local daemon (astramem-local must be running)
 # OR — if you have a dashboard claim code:
 astramem connect ABCD-1234 --env prod
 ```
+
+---
+
+## Development
+
+```bash
+# Install dependencies (creates / refreshes bun.lock)
+bun install
+
+# Run the test suite
+bun test
+
+# Type-check
+bun run typecheck      # equivalent: bunx tsc --noEmit
+
+# Link the bin locally for manual testing
+bun link
+```
+
+> **Publish** — `bun publish` writes to GitHub Packages via the `.npmrc` auth config (same
+> as the previous npm publish path). Requires `NODE_AUTH_TOKEN` set in the environment.
+> Bun 1.1+ supports `bun publish` natively.
 
 After pairing, Claude Code hooks and slash commands (`/astramem:recall`, `/astramem:remember`) resolve the provider
 automatically. No manual env-var export required for day-to-day use.
