@@ -1,6 +1,6 @@
 {
   "name": "astramem",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Slash commands + auto-capture hooks bridging Claude Code to AstraMemory. Provider selector routes between local and SaaS backends. Bun-native TypeScript CLI. Fail-silent ingest log. Bearer scrubbing at every output sink.",
   "author": {
     "name": "astra"
