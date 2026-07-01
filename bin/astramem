@@ -28,7 +28,7 @@ Subcommands:
 Global flags:
   --provider local|saas|auto  Override provider selection
   --help, -h                  Show this help message
-  --version                   Show version
+  --version, -v               Show version
 
 Run 'astramem <subcommand> --help' for subcommand-specific usage.
 `.trimStart();
@@ -61,7 +61,7 @@ async function main(): Promise<void> {
     process.exit(0);
   }
 
-  if (args[0] === '--version') {
+  if (args[0] === '--version' || args[0] === '-v') {
     process.stdout.write(VERSION + '\n');
     process.exit(0);
   }
@@ -73,7 +73,7 @@ async function main(): Promise<void> {
     process.stdout.write(HELP);
     process.exit(0);
   }
-  if (remaining[0] === '--version') {
+  if (remaining[0] === '--version' || remaining[0] === '-v') {
     process.stdout.write(VERSION + '\n');
     process.exit(0);
   }
