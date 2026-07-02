@@ -10,6 +10,7 @@ import { readIngestLogTail } from '../lib/log.ts';
 import { getDeprecationHits } from '../lib/env.ts';
 import { ENV } from '../lib/env-specs.ts';
 import { resolveLocalUrlWithSource } from '../lib/local-url.ts';
+import { stats as pendingStats } from '../lib/pending.ts';
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -158,7 +159,10 @@ export async function runDoctor(args: string[] = []): Promise<number> {
     }
   }
 
-  // 6. Env deprecation — snapshot of alias hit counts accumulated BEFORE doctor ran.
+  // 6. Pending queue stats
+  const pending = pendingStats();
+
+  // 7. Env deprecation — snapshot of alias hit counts accumulated BEFORE doctor ran.
   //    buildDeprecationHits() only reads the in-process counter map; it does NOT
   //    call resolveEnv(), so it cannot inflate the counts during this run.
   const deprecationHits = buildDeprecationHits();
@@ -177,10 +181,34 @@ export async function runDoctor(args: string[] = []): Promise<number> {
       ),
       local_url: localUrl,
       local_url_source: localUrlResolution.source,
+      pending: {
+        count: pending.count,
+        bytes: pending.bytes,
+        oldest_epoch_ms: pending.oldest_epoch_ms,
+        rejected_count: pending.rejected_count,
+      },
       deprecation_hits: deprecationHits,
     };
     process.stdout.write(JSON.stringify(output, null, 2) + '\n');
     return 0;
+  }
+
+  // 6. Pending queue (human-readable)
+  lines.push('');
+  lines.push('PENDING');
+  if (pending.count === 0 && pending.rejected_count === 0) {
+    lines.push('  count: 0 files (queue empty)');
+    lines.push('  rejected: 0 files');
+  } else {
+    const mb = (pending.bytes / (1024 * 1024)).toFixed(2);
+    lines.push(`  count: ${pending.count} file${pending.count === 1 ? '' : 's'} (${mb} MB)`);
+    if (pending.oldest_epoch_ms !== null) {
+      const oldestDate = new Date(pending.oldest_epoch_ms);
+      const ageMs = Date.now() - pending.oldest_epoch_ms;
+      const ageHours = (ageMs / (1000 * 60 * 60)).toFixed(1);
+      lines.push(`  oldest: ${oldestDate.toISOString().replace('T', ' ').slice(0, 19)} (age: ${ageHours}h)`);
+    }
+    lines.push(`  rejected: ${pending.rejected_count} file${pending.rejected_count === 1 ? '' : 's'}`);
   }
 
   lines.push('');

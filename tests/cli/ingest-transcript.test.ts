@@ -6,12 +6,14 @@
  * APPDATA / HOME redirected so log writes are isolated.
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mkdtempSync, rmSync, existsSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, existsSync, writeFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { runIngestTranscript } from '../../src/cli/ingest-transcript.ts';
 import { createMockProvider, createFailingProvider } from './mock-provider.ts';
 import type { TranscriptIngestPayload } from '../../src/contracts/wire.ts';
+import { TransientError } from '../../src/lib/errors.ts';
+import { pendingDir } from '../../src/lib/pending.ts';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -366,5 +368,64 @@ describe('runIngestTranscript', () => {
     );
     const envelope = provider._stubs.ingestTranscript.mock.calls[0]![0] as TranscriptIngestPayload;
     expect(envelope.event).toBe('subagent_stop');
+  });
+
+  // -------------------------------------------------------------------------
+  // Bug B: transient failure → enqueued to pending/  (issue #13)
+  // -------------------------------------------------------------------------
+
+  it('enqueues payload to pending/ when provider throws TransientError', async () => {
+    const filePath = writeTranscript([{ role: 'user', text: 'hello' }]);
+    const transientProvider = createMockProvider({
+      ingestTranscriptResult: () => Promise.reject(new TransientError('ECONNREFUSED')),
+    });
+    const code = await runIngestTranscript(baseArgs(filePath), { _provider: transientProvider });
+    expect(code).toBe(0); // still fire-and-forget
+    const dir = pendingDir();
+    const files = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.json')) : [];
+    expect(files.length).toBeGreaterThan(0);
+  });
+
+  it('does NOT enqueue when provider succeeds', async () => {
+    const filePath = writeTranscript([{ role: 'user', text: 'hello' }]);
+    const provider = createMockProvider();
+    const code = await runIngestTranscript(baseArgs(filePath), { _provider: provider });
+    expect(code).toBe(0);
+    const dir = pendingDir();
+    const files = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.json')) : [];
+    expect(files.length).toBe(0);
+  });
+
+  it('drains pending before live call — drained payload reaches provider', async () => {
+    // Pre-enqueue a payload using the pending module directly
+    const { enqueue } = await import('../../src/lib/pending.ts');
+    const queuedPayload: TranscriptIngestPayload = {
+      wire_version: 'v1.0',
+      event: 'session_end',
+      session_id: 'queued-sess',
+      project_id: 'queued-proj',
+      captured_at: new Date(Date.now() - 60000).toISOString(),
+      turns: [{ role: 'user', text: 'queued turn' }],
+      client_scrub_applied: true,
+      client_scrub_hits: 0,
+      client_scrub_version: 'v1',
+      client_version: '0.5.4',
+    };
+    enqueue(queuedPayload);
+
+    // Now run a live ingest — expect both the pending + live payloads to be delivered
+    const filePath = writeTranscript([{ role: 'user', text: 'live turn' }]);
+    const provider = createMockProvider();
+    const code = await runIngestTranscript(baseArgs(filePath), { _provider: provider });
+    expect(code).toBe(0);
+
+    // provider should have been called at least twice: once for drain, once for live
+    const callCount = provider._stubs.ingestTranscript.mock.calls.length;
+    expect(callCount).toBeGreaterThanOrEqual(2);
+
+    // Pending dir should be empty after successful drain
+    const dir = pendingDir();
+    const remaining = existsSync(dir) ? readdirSync(dir).filter((f) => f.endsWith('.json')) : [];
+    expect(remaining).toHaveLength(0);
   });
 });
