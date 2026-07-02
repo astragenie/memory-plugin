@@ -1,6 +1,6 @@
 {
   "name": "@astragenie/astramem-plugin",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "AstraMemory Claude Code plugin: provider selector + hooks + CLI. Bun-native TypeScript. Targets local or SaaS AstraMemory backends.",
   "type": "module",
   "bin": {
